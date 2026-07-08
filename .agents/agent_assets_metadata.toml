@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "2sOt7HQYEuFLEdyaOieKE"
+uri = "file://gettheedge-site.zip"
+type = "unspecified"
+title = "gettheedge.com — all 8 pages"
