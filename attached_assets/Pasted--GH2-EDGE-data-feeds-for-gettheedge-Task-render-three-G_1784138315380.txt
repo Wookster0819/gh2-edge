@@ -1,0 +1,106 @@
+# GH2 EDGE™ — data feeds for gettheedge
+
+**Task:** render three GH2 EDGE analyses on the site, in the site's own design.
+
+**The rule that matters:** you get the **numbers**, not our pictures. Build these as native
+components using the site's existing tokens (`#FAFAF7` bg / `#141412` text / `#6B6B64` muted /
+`#C43A1E` accent, Helvetica Neue + Times). They must look like they were always part of the site.
+
+**Do not iframe or copy our HTML.** We publish reference pages so you can see what the numbers
+*should say*. They are our styling — dark navy, teal, serif. Ignore how they look entirely.
+
+---
+
+## The feeds are GATED. Fetch them SERVER-SIDE.
+
+This data is **never for public display**. Every URL below sits behind the site gate and returns a
+**302 to /login.html** without an auth cookie.
+
+**This means a browser-side `fetch()` will not work** — your visitor has no cookie, so their
+browser gets the login page instead of JSON. **Your server must fetch it**, then render the page.
+
+Handshake (server-side, once per 24h — the cookie lasts that long):
+
+    POST https://edge.gh2benefits.com/api/enterprise-auth
+         Content-Type: application/json
+         {"code":"<access code — ask Jae, do not commit it>"}
+    -> Set-Cookie: enterprise1_auth=...
+
+    GET  https://edge.gh2benefits.com/dashboards/data/index.json
+         Cookie: enterprise1_auth=...
+    -> 200 JSON
+
+Cache the cookie server-side; re-auth on a 302. **Never ship the access code to the browser.**
+
+| Feed | URL |
+|---|---|
+| index (start here) | `https://edge.gh2benefits.com/dashboards/data/index.json` |
+| The Blind Spot | `https://edge.gh2benefits.com/dashboards/data/blind-spot.json` |
+| Annuity Protection | `https://edge.gh2benefits.com/dashboards/data/annuity-protection.json` |
+| Life Insurance Cohorts | `https://edge.gh2benefits.com/dashboards/data/termlife-cohorts.json` |
+
+**Fetch, don't hardcode.** These get regenerated from the engine and re-published. Copy the values
+into source and the site goes stale silently. (Cache them on your side however you like — just
+re-fetch, don't retype.)
+
+Every feed carries a `definitions` block — use that wording for tooltips/footnotes instead of
+writing your own explanation of a number. Each also carries `disclaimer` and `rights`; both must
+appear on any page showing this data.
+
+---
+
+## 1. `blind-spot.json` — the flagship
+
+**What it says:** two retirement plans both report "89.5% chance of success" and are **$223,000
+apart**. It's the same plan — the only difference is which account you draw from first. The
+success number answers *"will the money last?"*, not *"how much do I keep?"*, so it can't tell
+them apart.
+
+**Lead with:**
+- `headline.statement` as the hero.
+- `blindSpot.plans[]` — two labels, two `dollarsKept`, both tagged with the same `successPct`.
+  The identical percentage sitting next to the different dollars **is** the point. Don't bury it.
+- `blindSpot.reading` — the "will it last vs how much do I keep" line.
+- `dispersion` — `spreadDollars` ($1.9M), `plansOver100kBehind` of `plansTotal` (31 of 32).
+
+**Behind a disclosure/accordion:** `plans[]` — all 32 ranked, with `gapToBest`. It's a lot, and
+it's for the curious. Not the hero. The names are the *industry's* names, not ours.
+
+## 2. `annuity-protection.json`
+
+**What it says:** asset-survival metrics make an annuity look like a mistake; the welfare metric —
+essentials the survivor can't cover — shows it protects. 21 households (`cells[]`), 7 net-worth
+levels × 3 states.
+
+`cells[].withoutAnnuity` vs `.withAnnuity`, each with `shortfall` / `survivesPct` / `coverage`,
+plus `shortfallReductionPct` and a `tier`. Good candidate for a net-worth selector.
+The tension to show: `survivesPct` flat-or-down while `shortfall` collapses 70–100%.
+
+## 3. `termlife-cohorts.json`
+
+**What it says:** how much life coverage a family is actually missing, in dollars.
+24 cohorts (`cohorts[]`) across earner type × income × kids × home.
+
+`coverageGapNeeds` / `coverageGapContinuity` are the two answers — a dollar face amount, **or the
+string `">=3000000"`** when even $3M can't close it (handle that case). `requiredReturn*Pct` may be
+`null` → render "n/a", never 0.
+
+---
+
+## Reference renderings — look, don't embed (also gated)
+
+`/dashboards/blind-spot.html` · `/dashboards/annuity-protection.html` · `/dashboards/termlife-cohorts.html`
+
+These show the intended *story and emphasis*. Their styling is wrong for this site by design.
+
+---
+
+## Done means
+
+- Looks native — a visitor can't tell which parts came from a feed.
+- Fetched server-side; the access code never reaches the browser.
+- Numbers come from the fetch, not the source.
+- Disclaimer + rights present.
+- The 32-plan list is tucked away, not dumped on the page.
+
+*GH2 EDGE™ Patents Pending · © 2026 GH2 Benefits LLC · For discussion purposes only.*

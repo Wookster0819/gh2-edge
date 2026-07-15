@@ -1,5 +1,5 @@
-entrypoint = "index.html"
-modules = ["web"]
+entrypoint = "server.js"
+modules = ["web", "nodejs-20"]
 
 [nix]
 channel = "stable-24_11"
@@ -19,9 +19,7 @@ mode = "parallel"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = """
-echo \"Serving HTML, open the Preview to see your output.
-To see changes you make, you can hit the refresh button in the preview, you do \u001B[1mnot\u001B[0m have to stop and run again.
-Console logs are available in the Preview devtools or your browser devtools.\" && static-web-server -w ./.config/static-web-server.toml > /dev/null 2>&1
+npm install --silent && node server.js
 """
 waitForPort = 80
 
