@@ -40,6 +40,7 @@
     ["Who It's For",       '/who-its-for.html'],
     ['The Math',           '/the-math.html'],
     ['What Edge Shows',    '/what-edge-shows'],
+    ['Research',           '/research'],
     ['Contact',            '/contact.html'],
   ];
 
@@ -406,6 +407,188 @@
       '<th style="padding:12px 16px;text-align:right;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;">Gap · Continuity</th>' +
       '<th style="padding:12px 16px;text-align:right;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;">Req. Return</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table></div></section>' + disclaimer));
+  });
+
+  // ── RESEARCH HUB ─────────────────────────────────────────────────────────────
+  function resCard(num, href, headline, deck) {
+    return '<a href="' + href + '" style="text-decoration:none;background:#FAFAF7;padding:32px 28px;display:block;border-bottom:1px solid #141412;">' +
+    '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:12px;">' + num + '</div>' +
+    '<h3 style="margin:0 0 12px;font-size:clamp(16px,1.4vw,20px);line-height:1.2;letter-spacing:-0.01em;font-weight:700;">' + headline + '</h3>' +
+    '<p style="margin:0 0 20px;font-size:13px;line-height:1.6;color:#6B6B64;">' + deck + '</p>' +
+    '<div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">Read the article \u2192</div></a>';
+  }
+
+  app.get('/research', (_req, res) => {
+    const masthead =
+      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:1px solid #141412;display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
+      '<div style="display:flex;align-items:baseline;gap:20px;">' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Retirement Readiness Survey</span>' +
+      '</div>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">Vol. I \u00b7 Jul 2026</span>' +
+      '</section>';
+
+    const featured =
+      '<a href="/what-edge-shows/findings" style="text-decoration:none;display:block;padding:52px 40px;background:#141412;color:#FAFAF7;height:100%;">' +
+      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:24px;">Survey Overview \u00b7 Jul 2026</div>' +
+      '<h2 style="margin:0 0 28px;font-size:clamp(26px,2.8vw,42px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;max-width:18ch;">Retirement, Read Plainly<span style="color:#C43A1E;">.</span></h2>' +
+      '<p style="margin:0 0 40px;font-size:clamp(15px,1.4vw,18px);line-height:1.6;color:#A9A9A0;max-width:36ch;">Most people feel ready to retire. Most people haven\u2019t checked. Six things the survey told us and what they mean for anyone within a decade of the finish line.</p>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid #2e2e2e;border-left:1px solid #2e2e2e;margin-bottom:48px;">' +
+      ['3 in 4\nFeel Ready', '#1\nTrust Barrier', '1 in 3\nBelow the Cliff', '1 in 5\nNo Target', '#1 Fear\nOutliving Savings', '8 in 10\nWant Income'].map(s => {
+        const [stat, label] = s.split('\n');
+        return '<div style="border-right:1px solid #2e2e2e;border-bottom:1px solid #2e2e2e;padding:20px 16px;">' +
+          '<div style="font-size:clamp(20px,1.8vw,26px);font-weight:700;color:#C43A1E;letter-spacing:-0.02em;">' + stat + '</div>' +
+          '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6B6B64;margin-top:4px;">' + label + '</div></div>';
+      }).join('') +
+      '</div>' +
+      '<div style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;color:#FAFAF7;">Read the full findings \u2192</div>' +
+      '</a>';
+
+    const sidebar =
+      resCard('Article \u00b7 01', '/research/confidence-gap',
+        'The Confidence Gap',
+        '3 in 4 feel ready. 1 in 3 are below the cliff. The gap between perceived and actual readiness is the survey\u2019s most striking finding.') +
+      resCard('Article \u00b7 02', '/research/trust-barrier',
+        'The Trust Problem',
+        '\u201CI don\u2019t know whom to trust\u201D beats cost as the #1 thing stopping people from getting help. The industry has an identity problem.') +
+      '<a href="/research/missing-tools" style="text-decoration:none;background:#FAFAF7;padding:32px 28px;display:block;">' +
+      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:12px;">Article \u00b7 03</div>' +
+      '<h3 style="margin:0 0 12px;font-size:clamp(16px,1.4vw,20px);line-height:1.2;letter-spacing:-0.01em;font-weight:700;">The Missing Tools</h3>' +
+      '<p style="margin:0 0 20px;font-size:13px;line-height:1.6;color:#6B6B64;">8 in 10 want guaranteed lifetime income. Almost none understand the tool that delivers it. A gap worth closing before it\u2019s a product worth selling.</p>' +
+      '<div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">Read the article \u2192</div></a>';
+
+    const grid =
+      '<section style="border-bottom:1px solid #141412;">' +
+      '<div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:3fr 2fr;gap:0;border-left:1px solid #141412;border-right:1px solid #141412;">' +
+      '<div style="border-right:1px solid #141412;">' + featured + '</div>' +
+      '<div style="display:grid;grid-template-rows:1fr 1fr 1fr;">' + sidebar + '</div>' +
+      '</div></section>';
+
+    res.send(page('Retirement Readiness Survey', 'Research', masthead + grid));
+  });
+
+  // ── RESEARCH ARTICLE HELPER ───────────────────────────────────────────────────
+  function resArticlePage(title, num, label, readTime, headline, deck, intro, blocks, closing, ctaHref, ctaLabel) {
+    const articleBlocks = blocks.map(([h, body, pull]) =>
+      '<div style="padding:56px 0;border-top:1px solid #141412;display:grid;grid-template-columns:1fr 2fr;gap:64px;align-items:start;">' +
+      '<div><span style="font-size:clamp(48px,5vw,72px);font-weight:700;color:#F1F0EA;line-height:1;letter-spacing:-0.03em;">' + num + '</span></div>' +
+      '<div>' +
+      '<h2 style="margin:0 0 20px;font-size:clamp(18px,1.8vw,24px);line-height:1.2;letter-spacing:-0.01em;font-weight:700;">' + h + '</h2>' +
+      '<p style="margin:0' + (pull ? ' 0 24px' : '') + ';font-size:16px;line-height:1.7;color:#6B6B64;">' + body + '</p>' +
+      (pull ? '<p style="margin:0;font-size:clamp(17px,1.6vw,22px);line-height:1.4;color:#141412;font-style:italic;border-left:3px solid #C43A1E;padding-left:20px;">' + pull + '</p>' : '') +
+      '</div></div>'
+    );
+
+    return page(title, 'Research',
+      '<section style="max-width:1360px;margin:0 auto;padding:88px 32px 64px;border-bottom:1px solid #141412;">' +
+      '<div style="display:flex;align-items:center;gap:16px;margin-bottom:40px;">' +
+      '<a href="/research" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;text-decoration:none;">\u2190 Retirement Readiness Survey</a>' +
+      '<span style="color:#E0DFD8;">|</span>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#C43A1E;">' + label + '</span>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">\u00b7 Jul 2026 \u00b7 ' + readTime + '</span>' +
+      '</div>' +
+      '<h1 style="margin:0 0 32px;font-size:clamp(40px,6vw,88px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:20ch;">' + headline + '<span style="color:#C43A1E;">.</span></h1>' +
+      '<p style="margin:0;font-size:clamp(18px,1.8vw,26px);line-height:1.5;max-width:46ch;color:#6B6B64;">' + deck + '</p>' +
+      '</section>' +
+      '<section style="max-width:1360px;margin:0 auto;padding:0 32px 88px;">' +
+      '<p style="padding:48px 0 0;font-size:16px;line-height:1.8;color:#141412;max-width:62ch;margin:0;">' + intro + '</p>' +
+      articleBlocks.join('') +
+      '<div style="border-top:1px solid #141412;padding-top:56px;margin-top:56px;">' +
+      '<p style="margin:0 0 40px;font-size:16px;line-height:1.8;color:#6B6B64;max-width:62ch;">' + closing + '</p>' +
+      '<a href="' + ctaHref + '" style="text-decoration:none;background:#141412;color:#FAFAF7;padding:18px 40px;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;display:inline-block;" onmouseover="this.style.background=\'#C43A1E\'" onmouseout="this.style.background=\'#141412\'">' + ctaLabel + ' \u2192</a>' +
+      '</div>' +
+      '<p style="margin:64px 0 0;font-size:12px;line-height:1.7;color:#A9A9A0;max-width:60ch;">Figures reflect responses to the GH2 EDGE\u2122 Retirement Readiness Survey and are shared as proportions of those who answered each question. Directional, not a formal poll \u2014 a signal worth acting on, not a headline to quote as fact.</p>' +
+      '</section>'
+    );
+  }
+
+  // ── ARTICLE 01: THE CONFIDENCE GAP ───────────────────────────────────────────
+  app.get('/research/confidence-gap', (_req, res) => {
+    res.send(resArticlePage(
+      'The Confidence Gap',
+      '01',
+      'Survey Research',
+      '4 min read',
+      'The Confidence Gap',
+      'Three in four people approaching retirement call themselves confident. One in three are below the balance where that confidence can be kept.',
+      'Confidence is a strange thing in retirement planning. It doesn\u2019t track the numbers \u2014 it tracks the story you\u2019ve been told, or the one you\u2019ve told yourself. When we asked people how they felt, what came back wasn\u2019t fear. It was a quiet assurance that no one has ever been asked to prove.',
+      [
+        [
+          'The mood is confident \u2014 and remarkably calm',
+          'Roughly three in four people described themselves as confident about their retirement. When we asked what worries them most, \u201Cnothing worries me much\u201D was nearly the most common answer \u2014 running neck and neck with \u201Cnot knowing if I have enough.\u201D That\u2019s a striking amount of calm for a decision this size.',
+          'Is the confidence earned, or just comfortable?'
+        ],
+        [
+          'There\u2019s a cliff a lot of people can\u2019t see',
+          'This is a wealthier-than-average group \u2014 a slim majority holds more than a million dollars. But about a third sit below what we\u2019d call the feasibility cliff: the point under roughly $750K where the math for a 30-year retirement gets genuinely tight. The unsettling part isn\u2019t the number. It\u2019s that most of the people below that line still describe themselves as confident. Low balances simply aren\u2019t translating into felt risk.',
+          ''
+        ]
+      ],
+      'The answer to the confidence gap isn\u2019t more anxiety. It\u2019s verification. A single honest number \u2014 here is where you stand, here is what you need, here is the gap \u2014 turns a feeling into a plan. That\u2019s what EDGE is built to provide.',
+      '/individual.html',
+      'Get your number'
+    ));
+  });
+
+  // ── ARTICLE 02: THE TRUST PROBLEM ────────────────────────────────────────────
+  app.get('/research/trust-barrier', (_req, res) => {
+    res.send(resArticlePage(
+      'The Trust Problem',
+      '02',
+      'Survey Research',
+      '4 min read',
+      'The Trust Problem',
+      'The gap between this audience and good advice isn\u2019t money. It\u2019s trust. And the industry has done almost nothing to earn it.',
+      'Ask people why they haven\u2019t gotten professional retirement help, and the answer you expect \u2014 \u201Cit costs too much\u201D \u2014 doesn\u2019t top the list. The answer that does is quieter, and harder to fix with a price cut.',
+      [
+        [
+          'The real barrier isn\u2019t cost. It\u2019s trust.',
+          'More people chose \u201CI don\u2019t know whom to trust\u201D than anything else \u2014 ahead of cost, and well ahead of \u201CI don\u2019t know where to start.\u201D It fits a finding just below the surface: the most common way people describe a financial professional\u2019s job is \u201Cselling to me,\u201D not \u201Chelping me.\u201D The default posture toward the industry is guarded \u2014 and understandably so.',
+          'The gap between this audience and good advice isn\u2019t money, and it isn\u2019t intelligence. It\u2019s trust.'
+        ],
+        [
+          'What would actually earn it',
+          'What would earn their trust is refreshingly unglamorous: someone held to a client-first standard, plain-English explanations, clear fees, and no pressure. Not magic returns. Not a slick app. Just proof that the person across the table is working for them, not at them.',
+          ''
+        ]
+      ],
+      'The fiduciary standard exists precisely to answer this problem. Knowing how to ask for it \u2014 and what to do when you don\u2019t get a clear answer \u2014 is one of the most valuable things anyone approaching retirement can learn.',
+      '/contact.html',
+      'Talk to GH2 EDGE'
+    ));
+  });
+
+  // ── ARTICLE 03: THE MISSING TOOLS ────────────────────────────────────────────
+  app.get('/research/missing-tools', (_req, res) => {
+    res.send(resArticlePage(
+      'The Missing Tools',
+      '03',
+      'Survey Research',
+      '5 min read',
+      'The Missing Tools',
+      'People know what they want from retirement. They don\u2019t have the tools to get it \u2014 and often don\u2019t know those tools exist.',
+      'Retirement has two fears that pull in opposite directions: running out of money, and spending too little of it. The survey found both alive and well \u2014 often in the same person. The products built to resolve that tension are sitting unused, mostly because no one has explained them.',
+      [
+        [
+          'Almost no one can name their number',
+          'Ask what balance would let them feel safe, and about one in five can\u2019t name one at all. Many who do name a figure set it above what they currently hold \u2014 they sense a shortfall but have no plan to close it. If there\u2019s a single highest-leverage thing anyone can be handed here, it\u2019s a concrete, personalized target.',
+          'You can\u2019t feel safe against a target you\u2019ve never been given.'
+        ],
+        [
+          'The deepest fear is outliving your money',
+          'The single biggest fear was outliving savings \u2014 now ahead of even healthcare costs. But close behind sits a very different worry: spending too little and missing out. That tension is the whole retirement puzzle in miniature. People need both permission to enjoy what they saved and the certainty that it will last.',
+          ''
+        ],
+        [
+          'They want lifetime income \u2014 but the tools are a black box',
+          'More than eight in ten said a tool that guarantees lifetime income would be useful. Yet the product built to do exactly that \u2014 the annuity \u2014 is also the one they understand least, by a wide margin. The appetite for what these tools do clearly exists. The plain-English explanation of how they work does not. That\u2019s a gap worth closing before it\u2019s a product worth selling.',
+          ''
+        ]
+      ],
+      'GH2 EDGE is built around one idea: give people the number first. A clear, defensible figure that answers both fears at once \u2014 here is what you can spend, and here is how long it lasts. Not a product pitch. A plan.',
+      '/individual.html',
+      'Find your answer'
+    ));
   });
 
   // ── Start ────────────────────────────────────────────────────────────────────
