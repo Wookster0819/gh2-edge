@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const TOTAL_MS = 31000;
+const TOTAL_MS = 21000;
 
 type State = 'idle' | 'waiting' | 'recording' | 'done' | 'error';
 

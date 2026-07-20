@@ -7,10 +7,10 @@ import { Scene3 } from './video_scenes/Scene3';
 import { Scene4 } from './video_scenes/Scene4';
 
 const SCENE_DURATIONS = { 
-  intro: 5500, 
-  context: 6000, 
-  stats: 10000, 
-  outro: 8500 
+  intro: 3500, 
+  context: 4000, 
+  stats: 7000, 
+  outro: 5500 
 };
 
 export default function VideoTemplate() {
