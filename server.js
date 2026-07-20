@@ -46,7 +46,7 @@
   function navHtml(active) {
     return '<header style="position:sticky;top:0;z-index:50;background:#FAFAF7;border-bottom:1px solid #141412;">' +
     '<nav style="max-width:1360px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;">' +
-    '<a href="/home.html" style="text-decoration:none;font-weight:700;font-size:17px;letter-spacing:0.02em;display:flex;align-items:center;gap:10px;">' +
+    '<a href="/" style="text-decoration:none;font-weight:700;font-size:17px;letter-spacing:0.02em;display:flex;align-items:center;gap:10px;">' +
     '<span style="width:11px;height:11px;background:#C43A1E;display:inline-block;"></span>GH2 EDGE</a>' +
     '<div style="display:flex;gap:28px;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;white-space:nowrap;align-items:center;">' +
     NAV.map(([label, href]) => {
@@ -105,6 +105,9 @@
     if (v == null) return 'n/a';
     return fmt$(v);
   }
+
+  // ── home.html → gateway redirect ────────────────────────────────────────────
+  app.get('/home.html', (_req, res) => res.redirect(301, '/'));
 
   // ── Static files ────────────────────────────────────────────────────────────
   app.use(express.static(path.join(__dirname)));
