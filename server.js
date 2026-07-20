@@ -37,8 +37,6 @@
   const NAV = [
     ['For Individuals',    '/individual.html'],
     ['How It Works',       '/how-it-works.html'],
-    ["Who It's For",       '/who-its-for.html'],
-    ['The Math',           '/the-math.html'],
     ['What Edge Shows',    '/what-edge-shows'],
     ['Contact',            '/contact.html'],
   ];
