@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVideoPlayer } from '@/lib/video';
+import { RecordButton } from './RecordButton';
 import { Scene1 } from './video_scenes/Scene1';
 import { Scene2 } from './video_scenes/Scene2';
 import { Scene3 } from './video_scenes/Scene3';
@@ -41,6 +42,8 @@ export default function VideoTemplate() {
         {currentScene === 2 && <Scene3 key="stats" />}
         {currentScene === 3 && <Scene4 key="outro" />}
       </AnimatePresence>
+
+      <RecordButton />
     </div>
   );
 }
