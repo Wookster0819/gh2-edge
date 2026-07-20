@@ -40,7 +40,6 @@
     ["Who It's For",       '/who-its-for.html'],
     ['The Math',           '/the-math.html'],
     ['What Edge Shows',    '/what-edge-shows'],
-    ['Research',           '/research'],
     ['Contact',            '/contact.html'],
   ];
 
@@ -137,6 +136,11 @@
       '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">Vol. I \u00b7 Jul 2026</span>' +
       '</section>';
 
+    const sectionLabel = (label) =>
+      '<div style="max-width:1360px;margin:0 auto;padding:40px 32px 20px;border-bottom:1px solid #141412;">' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">' + label + '</span>' +
+      '</div>';
+
     const featured =
       '<a href="/what-edge-shows/findings" style="text-decoration:none;display:block;padding:52px 40px;background:#141412;color:#FAFAF7;height:100%;">' +
       '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:24px;">Survey Research \u00b7 Jul 2026</div>' +
@@ -166,14 +170,65 @@
       '<p style="margin:0 0 20px;font-size:13px;line-height:1.6;color:#6B6B64;">24 household cohorts. Two coverage gaps \u2014 needs and continuity \u2014 in dollars, including the cases that can\u2019t be closed.</p>' +
       '<div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">See the analysis \u2192</div></a>';
 
-    const grid =
+    // ── Section 1: EDGE Analysis (3 live-data articles) ──────────────────────
+    const edgeLabel = sectionLabel('What Edge Shows \u2014 Live Analysis');
+
+    const edgeFeatured =
+      '<div style="padding:52px 40px;background:#141412;color:#FAFAF7;height:100%;">' +
+      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:24px;">EDGE Engine \u00b7 Live Data</div>' +
+      '<h2 style="margin:0 0 28px;font-size:clamp(26px,2.8vw,42px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;max-width:18ch;">Three findings you can\u2019t get anywhere else<span style="color:#C43A1E;">.</span></h2>' +
+      '<p style="margin:0;font-size:clamp(15px,1.4vw,18px);line-height:1.6;color:#A9A9A0;max-width:36ch;">Live feeds from the EDGE engine \u2014 rendered in this site\u2019s own language, not ours. Updated continuously.</p>' +
+      '</div>';
+
+    const edgeGrid =
       '<section style="border-bottom:1px solid #141412;">' +
       '<div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:3fr 2fr;gap:0;border-left:1px solid #141412;border-right:1px solid #141412;">' +
-      '<div style="border-right:1px solid #141412;">' + featured + '</div>' +
+      '<div style="border-right:1px solid #141412;">' + edgeFeatured + '</div>' +
       '<div style="display:grid;grid-template-rows:1fr 1fr 1fr;">' + sidebar + '</div>' +
       '</div></section>';
 
-    res.send(page('What Edge Shows', 'What Edge Shows', masthead + grid));
+    // ── Section 2: RR Survey (featured + 3 articles) ─────────────────────────
+    const surveyLabel = sectionLabel('EDGE Retirement Readiness Survey \u2014 Jul 2026');
+
+    const surveyFeatured =
+      '<a href="/what-edge-shows/findings" style="text-decoration:none;display:block;padding:52px 40px;background:#141412;color:#FAFAF7;height:100%;">' +
+      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:24px;">Survey Overview \u00b7 Jul 2026</div>' +
+      '<h2 style="margin:0 0 28px;font-size:clamp(26px,2.8vw,42px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;max-width:18ch;">Retirement, Read Plainly<span style="color:#C43A1E;">.</span></h2>' +
+      '<p style="margin:0 0 40px;font-size:clamp(15px,1.4vw,18px);line-height:1.6;color:#A9A9A0;max-width:36ch;">Most people feel ready to retire. Most people haven\u2019t checked. Six things the survey told us \u2014 and what they mean for anyone within a decade of the finish line.</p>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid #2e2e2e;border-left:1px solid #2e2e2e;margin-bottom:48px;">' +
+      ['3 in 4\nFeel Ready','#1\nTrust Barrier','1 in 3\nBelow the Cliff','1 in 5\nNo Target','#1 Fear\nOutliving Savings','8 in 10\nWant Income'].map(s => {
+        const [stat, lbl] = s.split('\n');
+        return '<div style="border-right:1px solid #2e2e2e;border-bottom:1px solid #2e2e2e;padding:20px 16px;">' +
+          '<div style="font-size:clamp(20px,1.8vw,26px);font-weight:700;color:#C43A1E;letter-spacing:-0.02em;">' + stat + '</div>' +
+          '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6B6B64;margin-top:4px;">' + lbl + '</div></div>';
+      }).join('') +
+      '</div>' +
+      '<div style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;color:#FAFAF7;">Read the full findings \u2192</div>' +
+      '</a>';
+
+    const surveySidebar =
+      resCard('Article \u00b7 01', '/research/confidence-gap',
+        'The Confidence Gap',
+        '3 in 4 feel ready. 1 in 3 are below the cliff. The gap between perceived and actual readiness is the survey\u2019s most striking finding.') +
+      resCard('Article \u00b7 02', '/research/trust-barrier',
+        'The Trust Problem',
+        '\u201CI don\u2019t know whom to trust\u201D beats cost as the #1 thing stopping people from getting help.') +
+      '<a href="/research/missing-tools" style="text-decoration:none;background:#FAFAF7;padding:32px 28px;display:block;">' +
+      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:12px;">Article \u00b7 03</div>' +
+      '<h3 style="margin:0 0 12px;font-size:clamp(16px,1.4vw,20px);line-height:1.2;letter-spacing:-0.01em;font-weight:700;">The Missing Tools</h3>' +
+      '<p style="margin:0 0 20px;font-size:13px;line-height:1.6;color:#6B6B64;">8 in 10 want guaranteed lifetime income. Almost none understand the tool that delivers it.</p>' +
+      '<div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">Read the article \u2192</div></a>';
+
+    const surveyGrid =
+      '<section style="border-bottom:1px solid #141412;">' +
+      '<div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:3fr 2fr;gap:0;border-left:1px solid #141412;border-right:1px solid #141412;">' +
+      '<div style="border-right:1px solid #141412;">' + surveyFeatured + '</div>' +
+      '<div style="display:grid;grid-template-rows:1fr 1fr 1fr;">' + surveySidebar + '</div>' +
+      '</div></section>';
+
+    res.send(page('What Edge Shows', 'What Edge Shows',
+      masthead + edgeLabel + edgeGrid + surveyLabel + surveyGrid
+    ));
   });
 
   app.get('/what-edge-shows/findings', (_req, res) => {
