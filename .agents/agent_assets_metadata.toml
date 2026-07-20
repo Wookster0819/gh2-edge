@@ -1,5 +1,10 @@
 uploads = []
-generated = []
+
+[[generated]]
+id = "zelbCN0svs_mRE3O0gPNY"
+uri = "file://public/images/texture-dark.png"
+type = "image"
+title = "Dark cinematic abstract texture"
 
 [[outputs]]
 id = "2sOt7HQYEuFLEdyaOieKE"
