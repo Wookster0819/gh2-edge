@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const TOTAL_MS = 30000;
+const TOTAL_MS = 31000;
 
-type State = 'idle' | 'waiting' | 'recording' | 'done';
+type State = 'idle' | 'waiting' | 'recording' | 'done' | 'error';
 
 export function RecordButton() {
   const [state, setState] = useState<State>('idle');
@@ -17,16 +17,26 @@ export function RecordButton() {
     let stream: MediaStream;
     try {
       stream = await (navigator.mediaDevices as any).getDisplayMedia({
-        video: { frameRate: 30 },
+        video: { frameRate: 30, width: 1920, height: 1080 },
         audio: false,
+        preferCurrentTab: true,
+        selfBrowserSurface: 'include',
+        surfaceSwitching: 'exclude',
+        monitorTypeSurfaces: 'exclude',
       });
     } catch {
-      setState('idle');
+      setState('error');
+      setTimeout(() => setState('idle'), 3000);
       return;
     }
 
     chunksRef.current = [];
-    const recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+
+    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+      ? 'video/webm;codecs=vp9'
+      : 'video/webm';
+
+    const recorder = new MediaRecorder(stream, { mimeType });
     recorderRef.current = recorder;
 
     recorder.ondataavailable = (e) => {
@@ -42,14 +52,15 @@ export function RecordButton() {
       a.href = url;
       a.download = 'gh2-edge-video.webm';
       a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
       setState('done');
       setTimeout(() => setState('idle'), 4000);
     };
 
     recorder.start(200);
     setState('recording');
-    setSecondsLeft(Math.round(TOTAL_MS / 1000));
+    const total = Math.round(TOTAL_MS / 1000);
+    setSecondsLeft(total);
 
     timerRef.current = setInterval(() => {
       setSecondsLeft((s) => {
@@ -64,113 +75,119 @@ export function RecordButton() {
   }
 
   function cancel() {
+    if (timerRef.current) clearInterval(timerRef.current);
     recorderRef.current?.stop();
     setState('idle');
   }
 
-  const labels: Record<State, string> = {
-    idle: 'Record & Download',
-    waiting: 'Select this tab…',
-    recording: `Recording ${secondsLeft}s`,
-    done: 'Saved to Downloads',
-  };
-
   return (
-    <div style={{ position: 'fixed', bottom: 28, right: 28, zIndex: 9999 }}>
-      <AnimatePresence mode="wait">
-        {state !== 'recording' ? (
-          <motion.button
-            key="btn"
-            onClick={state === 'idle' ? start : undefined}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            style={{
-              background: state === 'done' ? '#1a5c35' : '#C43A1E',
-              color: '#FAFAF7',
-              border: 'none',
-              padding: '12px 22px',
-              fontSize: 13,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              cursor: state === 'idle' ? 'pointer' : 'default',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-            }}
-          >
-            {state === 'idle' && (
-              <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#FAFAF7', display: 'inline-block' }} />
-            )}
-            {labels[state]}
-          </motion.button>
-        ) : (
+    <div style={{ position: 'fixed', bottom: 28, right: 28, zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+
+      <AnimatePresence>
+        {state === 'waiting' && (
           <motion.div
-            key="recording"
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            style={{ display: 'flex', gap: 8, alignItems: 'center' }}
-          >
-            <div style={{
+            exit={{ opacity: 0 }}
+            style={{
               background: '#111',
               color: '#FAFAF7',
-              padding: '12px 18px',
-              fontSize: 13,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
+              padding: '10px 16px',
+              fontSize: 12,
+              lineHeight: 1.6,
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-            }}>
-              <motion.span
-                style={{ width: 10, height: 10, borderRadius: '50%', background: '#C43A1E', display: 'inline-block' }}
-                animate={{ opacity: [1, 0.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              />
-              {labels.recording}
-            </div>
-            <button
-              onClick={cancel}
-              style={{
-                background: '#333',
-                color: '#FAFAF7',
-                border: 'none',
-                padding: '12px 16px',
-                fontSize: 12,
-                cursor: 'pointer',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Cancel
-            </button>
+              maxWidth: 230,
+              textAlign: 'right',
+            }}
+          >
+            In the dialog, click <strong>"Share"</strong> — your tab is already selected.
           </motion.div>
         )}
       </AnimatePresence>
 
-      {state === 'waiting' && (
-        <div style={{
-          position: 'absolute',
-          bottom: '100%',
-          right: 0,
-          marginBottom: 10,
-          background: '#111',
-          color: '#FAFAF7',
-          padding: '10px 14px',
-          fontSize: 12,
-          maxWidth: 220,
-          lineHeight: 1.5,
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}>
-          Choose <strong>this tab</strong> in the Share dialog, then click Share.
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {state === 'idle' && (
+          <motion.button key="idle"
+            onClick={start}
+            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
+            style={btnStyle('#C43A1E', true)}
+          >
+            <Dot color="#FAFAF7" /> RECORD &amp; DOWNLOAD
+          </motion.button>
+        )}
+
+        {state === 'waiting' && (
+          <motion.button key="waiting"
+            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
+            style={btnStyle('#555', false)}
+          >
+            WAITING…
+          </motion.button>
+        )}
+
+        {state === 'recording' && (
+          <motion.div key="recording"
+            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
+            style={{ display: 'flex', gap: 8 }}
+          >
+            <div style={btnStyle('#111', false)}>
+              <PulsingDot /> RECORDING {secondsLeft}s
+            </div>
+            <button onClick={cancel} style={btnStyle('#333', true)}>CANCEL</button>
+          </motion.div>
+        )}
+
+        {state === 'done' && (
+          <motion.div key="done"
+            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
+            style={btnStyle('#1a5c35', false)}
+          >
+            ✓ SAVED TO DOWNLOADS
+          </motion.div>
+        )}
+
+        {state === 'error' && (
+          <motion.div key="error"
+            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
+            style={btnStyle('#6B2020', false)}
+          >
+            CANCELLED
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
+  );
+}
+
+function btnStyle(bg: string, pointer: boolean): React.CSSProperties {
+  return {
+    background: bg,
+    color: '#FAFAF7',
+    border: 'none',
+    padding: '12px 20px',
+    fontSize: 12,
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    cursor: pointer ? 'pointer' : 'default',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontWeight: 700,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    whiteSpace: 'nowrap',
+  };
+}
+
+function Dot({ color }: { color: string }) {
+  return <span style={{ width: 8, height: 8, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />;
+}
+
+function PulsingDot() {
+  return (
+    <motion.span
+      style={{ width: 8, height: 8, borderRadius: '50%', background: '#C43A1E', display: 'inline-block', flexShrink: 0 }}
+      animate={{ opacity: [1, 0.2, 1] }}
+      transition={{ duration: 0.9, repeat: Infinity }}
+    />
   );
 }
