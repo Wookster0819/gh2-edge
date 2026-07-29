@@ -107,6 +107,9 @@
   // ── home.html → gateway redirect ────────────────────────────────────────────
   app.get('/home.html', (_req, res) => res.redirect(301, '/'));
 
+  // ── Root: serve home.html (not the Vite index.html) ─────────────────────────
+  app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'home.html')));
+
   // ── Static files ────────────────────────────────────────────────────────────
   app.use(express.static(path.join(__dirname)));
 
