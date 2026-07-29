@@ -76,7 +76,10 @@
   <footer style="border-top:1px solid #141412;">
     <div style="max-width:1360px;margin:0 auto;padding:28px 32px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:13px;color:#6B6B64;">
       <div>GH2 EDGE · Patent Pending · Trade Secret</div>
-      <div>Jae W. Oh, MBA, CFP® · GH2 Benefits LLC</div>
+      <div style="display:flex;gap:24px;align-items:center;">
+        <a href="/video" style="color:#6B6B64;text-decoration:none;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;" onmouseover="this.style.color='#C43A1E'" onmouseout="this.style.color='#6B6B64'">Video</a>
+        <span>Jae W. Oh, MBA, CFP® · GH2 Benefits LLC</span>
+      </div>
     </div>
   </footer>
   </body>
@@ -107,8 +110,100 @@
   // ── home.html → gateway redirect ────────────────────────────────────────────
   app.get('/home.html', (_req, res) => res.redirect(301, '/'));
 
-  // ── Root: serve home.html (not the Vite index.html) ─────────────────────────
-  app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'home.html')));
+  // ── Root: homepage ───────────────────────────────────────────────────────────
+  app.get('/', (_req, res) => {
+    const hero =
+      '<section style="border-bottom:1px solid #141412;">' +
+      '<div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:3fr 2fr;gap:0;border-left:1px solid #141412;border-right:1px solid #141412;">' +
+      // Left: headline
+      '<div style="padding:80px 64px 80px 48px;border-right:1px solid #141412;">' +
+      '<div style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;margin-bottom:48px;">GH2 EDGE\u2122 \u00b7 Patent Pending \u00b7 Trade Secret</div>' +
+      '<h1 style="margin:0 0 40px;font-size:clamp(44px,6vw,96px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:16ch;">There is a right retirement answer<span style="color:#C43A1E;">.</span></h1>' +
+      '<p style="margin:0 0 56px;font-size:clamp(17px,1.6vw,22px);line-height:1.6;color:#6B6B64;max-width:38ch;">Every retirement household. Every strategy. Already solved.</p>' +
+      '<div style="display:flex;gap:16px;flex-wrap:wrap;">' +
+      '<a href="/individual.html" style="text-decoration:none;background:#141412;color:#FAFAF7;padding:18px 40px;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;display:inline-block;" onmouseover="this.style.background=\'#C43A1E\'" onmouseout="this.style.background=\'#141412\'">Start with one question \u2192</a>' +
+      '<a href="/how-it-works.html" style="text-decoration:none;background:transparent;color:#141412;padding:18px 40px;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;display:inline-block;border:1px solid #141412;" onmouseover="this.style.background=\'#141412\';this.style.color=\'#FAFAF7\'" onmouseout="this.style.background=\'transparent\';this.style.color=\'#141412\'">How it works</a>' +
+      '</div></div>' +
+      // Right: key facts
+      '<div style="display:grid;grid-template-rows:1fr 1fr 1fr;">' +
+      ['6.4T\nRetirement outcomes evaluated', '100%\nHousehold-level precision', '#1\nGap: the right metric'].map(s => {
+        const [stat, label] = s.split('\n');
+        return '<div style="padding:40px 36px;border-bottom:1px solid #141412;">' +
+          '<div style="font-size:clamp(32px,3.2vw,52px);font-weight:700;color:#C43A1E;letter-spacing:-0.03em;line-height:1;margin-bottom:12px;">' + stat + '</div>' +
+          '<div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + label + '</div></div>';
+      }).join('') +
+      '</div>' +
+      '</div></section>';
+
+    const pillarsLabel =
+      '<div style="max-width:1360px;margin:0 auto;padding:40px 32px 20px;border-bottom:1px solid #141412;">' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">What EDGE does \u2014 three capabilities</span>' +
+      '</div>';
+
+    const pillars =
+      '<section style="border-bottom:1px solid #141412;">' +
+      '<div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;border-left:1px solid #141412;border-right:1px solid #141412;">' +
+      [
+        ['Finds the blind spot', '/what-edge-shows/blind-spot', 'Two plans. Same score. $223,000 apart.', 'The standard success metric can\u2019t tell them apart. EDGE can \u2014 and does, for every household.'],
+        ['Corrects the annuity metric', '/what-edge-shows/annuity-protection', 'The metric that makes annuities look wrong is the wrong metric.', 'Asset-survival scores miss the welfare question. Shortfall collapses 70\u2013100% when you measure what actually matters.'],
+        ['Sizes the life insurance gap', '/what-edge-shows/life-insurance', 'How much coverage is the family actually missing?', '24 household cohorts. Two coverage gaps \u2014 needs and continuity \u2014 in dollars.'],
+      ].map(([cap, href, headline, desc], i) =>
+        '<a href="' + href + '" style="text-decoration:none;padding:48px 36px;display:block;' + (i < 2 ? 'border-right:1px solid #141412;' : '') + 'background:#FAFAF7;" onmouseover="this.style.background=\'#F1F0EA\'" onmouseout="this.style.background=\'#FAFAF7\'">' +
+        '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:20px;">0' + (i+1) + ' \u00b7 ' + cap + '</div>' +
+        '<h2 style="margin:0 0 16px;font-size:clamp(18px,1.6vw,24px);line-height:1.2;letter-spacing:-0.01em;font-weight:700;">' + headline + '</h2>' +
+        '<p style="margin:0 0 32px;font-size:14px;line-height:1.7;color:#6B6B64;">' + desc + '</p>' +
+        '<div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">See the analysis \u2192</div>' +
+        '</a>'
+      ).join('') +
+      '</div></section>';
+
+    const proofLabel =
+      '<div style="max-width:1360px;margin:0 auto;padding:40px 32px 20px;border-bottom:1px solid #141412;">' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">EDGE Retirement Readiness Survey \u2014 Jul 2026</span>' +
+      '</div>';
+
+    const proof =
+      '<section style="border-bottom:1px solid #141412;">' +
+      '<div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:3fr 2fr;border-left:1px solid #141412;border-right:1px solid #141412;">' +
+      '<a href="/what-edge-shows/findings" style="text-decoration:none;display:block;padding:52px 40px;background:#141412;color:#FAFAF7;border-right:1px solid #141412;">' +
+      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:24px;">Survey Research \u00b7 Jul 2026</div>' +
+      '<h2 style="margin:0 0 28px;font-size:clamp(26px,2.8vw,42px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;max-width:18ch;">Retirement, Read Plainly<span style="color:#C43A1E;">.</span></h2>' +
+      '<p style="margin:0 0 40px;font-size:clamp(15px,1.4vw,18px);line-height:1.6;color:#A9A9A0;max-width:36ch;">Most people feel ready to retire. Most people haven\u2019t checked. Six things the survey told us \u2014 and what they mean for anyone within a decade of the finish line.</p>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid #2e2e2e;border-left:1px solid #2e2e2e;margin-bottom:48px;">' +
+      ['3 in 4\nFeel Ready','#1\nTrust Barrier','1 in 3\nBelow the Cliff','1 in 5\nNo Target','#1 Fear\nOutliving Savings','8 in 10\nWant Income'].map(s => {
+        const [stat, lbl] = s.split('\n');
+        return '<div style="border-right:1px solid #2e2e2e;border-bottom:1px solid #2e2e2e;padding:20px 16px;">' +
+          '<div style="font-size:clamp(20px,1.8vw,26px);font-weight:700;color:#C43A1E;letter-spacing:-0.02em;">' + stat + '</div>' +
+          '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6B6B64;margin-top:4px;">' + lbl + '</div></div>';
+      }).join('') +
+      '</div>' +
+      '<div style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;color:#FAFAF7;">Read the findings \u2192</div>' +
+      '</a>' +
+      '<div style="display:flex;flex-direction:column;justify-content:center;padding:52px 40px;gap:32px;">' +
+      '<div>' +
+      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:12px;">Built for advisors</div>' +
+      '<p style="margin:0;font-size:clamp(15px,1.4vw,18px);line-height:1.5;color:#141412;font-weight:600;">GH2 EDGE\u2122 is a retirement intelligence platform by Jae W. Oh, MBA, CFP\u00ae of GH2 Benefits LLC.</p>' +
+      '</div>' +
+      '<a href="/contact.html" style="text-decoration:none;background:#141412;color:#FAFAF7;padding:18px 40px;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;display:inline-block;align-self:flex-start;" onmouseover="this.style.background=\'#C43A1E\'" onmouseout="this.style.background=\'#141412\'">Get in touch \u2192</a>' +
+      '</div>' +
+      '</div></section>';
+
+    res.send(page('GH2 EDGE', '',
+      hero + pillarsLabel + pillars + proofLabel + proof
+    ));
+  });
+
+  // ── Video page ───────────────────────────────────────────────────────────────
+  app.get('/video', (_req, res) => {
+    res.send(page('GH2 EDGE Video', '',
+      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px;">' +
+      '<div style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;margin-bottom:32px;">GH2 EDGE\u2122 \u00b7 Cinematic Overview</div>' +
+      '<div style="aspect-ratio:16/9;width:100%;background:#141412;border:1px solid #141412;overflow:hidden;">' +
+      '<iframe src="http://localhost:3001" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>' +
+      '</div>' +
+      '</section>'
+    ));
+  });
 
   // ── Static files ────────────────────────────────────────────────────────────
   app.use(express.static(path.join(__dirname)));
@@ -651,6 +746,6 @@
   });
 
   // ── Start ────────────────────────────────────────────────────────────────────
-  const PORT = process.env.PORT || 80;
+  const PORT = process.env.PORT || 5000;
   app.listen(PORT, '0.0.0.0', () => console.log('GH2 EDGE site on :' + PORT));
   
