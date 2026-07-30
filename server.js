@@ -110,119 +110,112 @@
   // ── home.html → gateway redirect ────────────────────────────────────────────
   app.get('/home.html', (_req, res) => res.redirect(301, '/'));
 
-  // ── Root: homepage ───────────────────────────────────────────────────────────
+  // ── Root: gateway homepage ───────────────────────────────────────────────────
   app.get('/', (_req, res) => {
     const A = '#C43A1E';
     const body = `
-<!-- HERO -->
-<section data-screen-label="Hero" style="max-width:1360px;margin:0 auto;padding:96px 32px 88px;">
-  <p style="margin:0 0 40px;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE &nbsp;·&nbsp; Patent Pending &nbsp;·&nbsp; Trade Secret</p>
-  <h1 style="margin:0;font-size:clamp(56px,8.2vw,124px);line-height:0.98;letter-spacing:-0.035em;font-weight:700;max-width:14ch;text-wrap:balance;">There is a right retirement answer<span style="color:${A};">.</span></h1>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:64px;align-items:end;">
-    <p style="margin:0;font-size:clamp(20px,2vw,28px);line-height:1.35;max-width:26ch;">Every retirement household. Every strategy. Already solved.</p>
-    <div style="display:flex;gap:16px;justify-content:end;flex-wrap:wrap;">
-      <a href="/contact.html" style="text-decoration:none;background:#141412;color:#FAFAF7;padding:18px 34px;font-size:15px;letter-spacing:0.06em;text-transform:uppercase;" onmouseover="this.style.background='${A}'" onmouseout="this.style.background='#141412'">Start with one question</a>
-      <a href="/how-it-works.html" style="text-decoration:none;border:1px solid #141412;padding:18px 34px;font-size:15px;letter-spacing:0.06em;text-transform:uppercase;" onmouseover="this.style.background='#141412';this.style.color='#FAFAF7'" onmouseout="this.style.background='transparent';this.style.color='#141412'">How it works</a>
-    </div>
-  </div>
-</section>
+<style>
+  .gw-btn { cursor:pointer; padding:18px 48px; font-size:15px; letter-spacing:0.1em; text-transform:uppercase; user-select:none; border:none; font-family:inherit; transition:background 0.1s,color 0.1s; }
+  .gw-btn-active  { background:#141412; color:#FAFAF7; }
+  .gw-btn-inactive{ background:transparent; color:#141412; }
+  .gw-btn-inactive:hover { background:#F1F0EA; }
+  .gw-panel { display:none; text-align:center; display:grid; gap:32px; justify-items:center; max-width:620px; }
+  .gw-panel.active { display:grid; }
+  .gw-cta { text-decoration:none; background:#141412; color:#FAFAF7; padding:20px 44px; font-size:15px; letter-spacing:0.06em; text-transform:uppercase; }
+  .gw-cta:hover { background:${A}; }
+</style>
 
-<!-- STATS BAND -->
-<section style="background:#141412;color:#FAFAF7;">
-  <div style="max-width:1360px;margin:0 auto;padding:72px 32px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;">
-    <div style="border-top:1px solid #FAFAF7;padding-top:24px;">
-      <div style="font-size:clamp(52px,5.5vw,84px);font-weight:700;letter-spacing:-0.03em;">97M</div>
-      <div style="margin-top:10px;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:#A9A9A0;">Retirement household profiles</div>
-    </div>
-    <div style="border-top:1px solid #FAFAF7;padding-top:24px;">
-      <div style="font-size:clamp(52px,5.5vw,84px);font-weight:700;letter-spacing:-0.03em;">7.8B</div>
-      <div style="margin-top:10px;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:#A9A9A0;">Strategy combinations</div>
-    </div>
-    <div style="border-top:2px solid ${A};padding-top:24px;">
-      <div style="font-size:clamp(52px,5.5vw,84px);font-weight:700;letter-spacing:-0.03em;">6.4T</div>
-      <div style="margin-top:10px;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:#A9A9A0;">Retirement outcomes evaluated</div>
-    </div>
-  </div>
-</section>
+<div style="min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;">
 
-<!-- 01 THE PROBLEM -->
-<section style="border-bottom:1px solid #141412;">
-  <div style="max-width:1360px;margin:0 auto;padding:96px 32px;display:grid;grid-template-columns:220px 1fr 1fr;gap:48px;">
-    <div style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#6B6B64;"><span style="color:${A};">01</span> The Problem</div>
-    <h2 style="margin:0;font-size:clamp(34px,3.4vw,52px);line-height:1.05;letter-spacing:-0.02em;font-weight:700;">Retirement decisions are interconnected. They cannot be optimized one at a time.</h2>
-    <div style="font-size:17px;line-height:1.6;max-width:44ch;">
-      <p style="margin:0 0 20px;">Medicare affects taxes. Taxes affect Roth conversions. Roth conversions affect RMDs. Social Security affects all of them. Change one decision, and the others move with it.</p>
-      <p style="margin:0 0 28px;color:#6B6B64;">Most planning tools solve these decisions separately — producing recommendations that appear reasonable but miss the right answer.</p>
-      <a href="/how-it-works.html" style="text-decoration:none;font-size:14px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:2px solid ${A};padding-bottom:3px;">See how EDGE solves it →</a>
+  <!-- HEADER (no nav — gateway only) -->
+  <header style="border-bottom:1px solid #141412;">
+    <div style="max-width:1360px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-weight:700;font-size:17px;letter-spacing:0.02em;display:flex;align-items:center;gap:10px;">
+        <span style="width:11px;height:11px;background:${A};display:inline-block;"></span>
+        GH2 EDGE
+      </span>
+      <span style="font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:#6B6B64;">gettheedge.com</span>
     </div>
-  </div>
-</section>
+  </header>
 
-<!-- 02 THE ANSWER -->
-<section style="border-bottom:1px solid #141412;">
-  <div style="max-width:1360px;margin:0 auto;padding:96px 32px;display:grid;grid-template-columns:220px 1fr;gap:48px;">
-    <div style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#6B6B64;"><span style="color:${A};">02</span> The Answer</div>
-    <div>
-      <h2 style="margin:0 0 48px;font-size:clamp(34px,3.4vw,52px);line-height:1.05;letter-spacing:-0.02em;font-weight:700;max-width:24ch;">Not AI. Not a model. Not a black box. EDGE retrieves the right answer — instantly.</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#141412;border:1px solid #141412;">
-        <div style="background:#FAFAF7;padding:32px 28px;">
-          <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;margin-bottom:14px;">Pre-computed</div>
-          <p style="margin:0;font-size:16px;line-height:1.55;">Every household, strategy, and jurisdiction solved simultaneously — taxes, Medicare, Roth conversions, RMDs, Social Security together.</p>
-        </div>
-        <div style="background:#FAFAF7;padding:32px 28px;">
-          <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;margin-bottom:14px;">Retrieved, not recomputed</div>
-          <p style="margin:0;font-size:16px;line-height:1.55;">The right answer exists. EDGE retrieves it instantly. No assumptions. No estimates. No averages.</p>
-        </div>
-        <div style="background:#FAFAF7;padding:32px 28px;">
-          <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;margin-bottom:14px;">Fully transparent</div>
-          <p style="margin:0;font-size:16px;line-height:1.55;">Every result is explainable, auditable, and fully owned by your organization.</p>
-        </div>
+  <!-- CENTER -->
+  <main style="max-width:1360px;margin:0 auto;width:100%;box-sizing:border-box;padding:80px 32px;display:grid;align-content:center;justify-items:center;gap:56px;">
+
+    <div style="text-align:center;display:grid;gap:28px;justify-items:center;">
+      <p style="margin:0;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">There is a right retirement answer</p>
+      <h1 style="margin:0;font-size:clamp(44px,5.6vw,84px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:16ch;text-wrap:balance;">Who is the answer for<span style="color:${A};">?</span></h1>
+    </div>
+
+    <!-- TOGGLE -->
+    <div style="display:inline-flex;border:1px solid #141412;background:#FAFAF7;">
+      <button id="btn-ind"  class="gw-btn gw-btn-active"   onclick="pick('individual')">Individual</button>
+      <button id="btn-inst" class="gw-btn gw-btn-inactive" onclick="pick('institutional')">Institutional</button>
+      <button id="btn-res"  class="gw-btn gw-btn-inactive" onclick="pick('research')">Research</button>
+    </div>
+
+    <!-- PANELS -->
+    <div id="panel-individual" class="gw-panel active">
+      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">You're approaching retirement — or already there. Social Security, Medicare, Roth conversions, taxes: your exact situation has already been solved.</p>
+      <a href="/individual.html" class="gw-cta">Find your answer →</a>
+    </div>
+
+    <div id="panel-institutional" class="gw-panel" style="display:none;">
+      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Broker/dealers, carriers, recordkeepers, asset managers: deliver the right answer for every household you serve — at scale.</p>
+      <a href="/home.html" class="gw-cta">Explore the platform →</a>
+    </div>
+
+    <div id="panel-research" class="gw-panel" style="display:none;">
+      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Live analysis from the EDGE engine. Three findings you can't get anywhere else — updated continuously from real household data.</p>
+      <a href="/what-edge-shows" class="gw-cta">See the analysis →</a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid #141412;">
+    <div style="max-width:1360px;margin:0 auto;padding:28px 32px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:13px;color:#6B6B64;">
+      <div>GH2 EDGE · Patent Pending · Trade Secret</div>
+      <div style="display:flex;gap:24px;align-items:center;">
+        <a href="/video" style="color:#6B6B64;text-decoration:none;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;" onmouseover="this.style.color='${A}'" onmouseout="this.style.color='#6B6B64'">Video</a>
+        <span>Jae W. Oh, MBA, CFP® · GH2 Benefits LLC</span>
       </div>
     </div>
-  </div>
-</section>
+  </footer>
 
-<!-- 03 WHO IT'S FOR -->
-<section style="border-bottom:1px solid #141412;">
-  <div style="max-width:1360px;margin:0 auto;padding:96px 32px;">
-    <div style="display:grid;grid-template-columns:220px 1fr;gap:48px;margin-bottom:56px;">
-      <div style="font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#6B6B64;"><span style="color:${A};">03</span> Who It's For</div>
-      <h2 style="margin:0;font-size:clamp(34px,3.4vw,52px);line-height:1.05;letter-spacing:-0.02em;font-weight:700;max-width:24ch;">Each tier gets its own custom solution.</h2>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#141412;border:1px solid #141412;">
-      <a href="/who-its-for.html#tier1" style="text-decoration:none;background:#FAFAF7;padding:36px 32px;display:grid;gap:12px;" onmouseover="this.style.background='#F1F0EA'" onmouseout="this.style.background='#FAFAF7'">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:${A};">Tier 1</span><span style="font-size:20px;">→</span></div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.01em;">Broker / Dealer</div>
-        <p style="margin:0;font-size:16px;line-height:1.5;color:#6B6B64;">From best judgment to the right answer — suitability you can prove.</p>
-      </a>
-      <a href="/who-its-for.html#tier2" style="text-decoration:none;background:#FAFAF7;padding:36px 32px;display:grid;gap:12px;" onmouseover="this.style.background='#F1F0EA'" onmouseout="this.style.background='#FAFAF7'">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:${A};">Tier 2</span><span style="font-size:20px;">→</span></div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.01em;">Carrier</div>
-        <p style="margin:0;font-size:16px;line-height:1.5;color:#6B6B64;">From population averages to the households that fit.</p>
-      </a>
-      <a href="/who-its-for.html#tier3" style="text-decoration:none;background:#FAFAF7;padding:36px 32px;display:grid;gap:12px;" onmouseover="this.style.background='#F1F0EA'" onmouseout="this.style.background='#FAFAF7'">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:${A};">Tier 3</span><span style="font-size:20px;">→</span></div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.01em;">Recordkeeper</div>
-        <p style="margin:0;font-size:16px;line-height:1.5;color:#6B6B64;">From participant averages to household-level answers.</p>
-      </a>
-      <a href="/who-its-for.html#tier4" style="text-decoration:none;background:#FAFAF7;padding:36px 32px;display:grid;gap:12px;" onmouseover="this.style.background='#F1F0EA'" onmouseout="this.style.background='#FAFAF7'">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-size:13px;letter-spacing:0.18em;text-transform:uppercase;color:${A};">Tier 4</span><span style="font-size:20px;">→</span></div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.01em;">Asset Manager</div>
-        <p style="margin:0;font-size:16px;line-height:1.5;color:#6B6B64;">From modeled assumptions to household-level proof.</p>
-      </a>
-    </div>
-  </div>
-</section>
+</div>
 
-<!-- CTA -->
-<section style="background:#141412;color:#FAFAF7;">
-  <div style="max-width:1360px;margin:0 auto;padding:112px 32px;display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;">
-    <h2 style="margin:0;font-size:clamp(38px,4.4vw,68px);line-height:1.02;letter-spacing:-0.03em;font-weight:700;max-width:18ch;">The right answer already exists. It starts with one question<span style="color:${A};">.</span></h2>
-    <a href="/contact.html" style="text-decoration:none;background:#FAFAF7;color:#141412;padding:20px 40px;font-size:15px;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;" onmouseover="this.style.background='${A}';this.style.color='#FAFAF7'" onmouseout="this.style.background='#FAFAF7';this.style.color='#141412'">The first move →</a>
-  </div>
-</section>`;
+<script>
+function pick(track) {
+  ['individual','institutional','research'].forEach(function(t) {
+    var btn   = document.getElementById('btn-' + (t === 'individual' ? 'ind' : t === 'institutional' ? 'inst' : 'res'));
+    var panel = document.getElementById('panel-' + t);
+    if (t === track) {
+      btn.className   = 'gw-btn gw-btn-active';
+      panel.style.display = 'grid';
+    } else {
+      btn.className   = 'gw-btn gw-btn-inactive';
+      panel.style.display = 'none';
+    }
+  });
+}
+</script>`;
 
-    res.send(page('GH2 EDGE', '', body));
+    // Gateway uses its own minimal header — bypass the page() nav wrapper
+    res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GH2 EDGE</title>
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:#FAFAF7;color:#141412;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+</style>
+</head>
+<body>${body}</body>
+</html>`);
   });
 
   // ── Video page ───────────────────────────────────────────────────────────────
