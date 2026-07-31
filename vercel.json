@@ -1,14 +1,12 @@
 {
   "version": 2,
-  "build": {
-    "env": {
-      "PUPPETEER_SKIP_DOWNLOAD": "true",
-      "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
+  "installCommand": "npm install --omit=dev",
+  "framework": null,
+  "functions": {
+    "server.js": {
+      "runtime": "nodejs20.x"
     }
   },
-  "builds": [
-    { "src": "server.js", "use": "@vercel/node" }
-  ],
   "routes": [
     { "src": "/(.*)", "dest": "server.js" }
   ]
