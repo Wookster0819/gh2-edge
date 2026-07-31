@@ -1,6 +1,11 @@
 {
   "version": 2,
-  "installCommand": "npm install --omit=dev",
+  "build": {
+    "env": {
+      "PUPPETEER_SKIP_DOWNLOAD": "true",
+      "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
+    }
+  },
   "builds": [
     { "src": "server.js", "use": "@vercel/node" }
   ],
