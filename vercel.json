@@ -3,9 +3,7 @@
   "installCommand": "npm install --omit=dev",
   "framework": null,
   "functions": {
-    "server.js": {
-      "runtime": "nodejs20.x"
-    }
+    "server.js": {}
   },
   "routes": [
     { "src": "/(.*)", "dest": "server.js" }
