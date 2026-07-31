@@ -771,6 +771,11 @@ a{color:inherit;}
   });
 
   // ── Start ────────────────────────────────────────────────────────────────────
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, '0.0.0.0', () => console.log('GH2 EDGE site on :' + PORT));
-  
+  // When run directly (node server.js), start the HTTP server.
+  // When imported by Vercel's serverless runtime, just export the app.
+  if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, '0.0.0.0', () => console.log('GH2 EDGE site on :' + PORT));
+  }
+
+  module.exports = app;
