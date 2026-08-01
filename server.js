@@ -616,72 +616,7 @@ a{color:inherit;}
     return r.json();
   }
 
-  app.get('/research', async (_req, res) => {
-    let lib;
-    try { lib = await getLibrary(); } catch(e) { lib = { books: [], whitePapers: [], articles: [] }; }
-
-    const A = '#C43A1E';
-    const BD = '1px solid #141412';
-
-    function accRow(label, title, meta, desc, url) {
-      return '<div style="max-width:1360px;margin:0 auto;padding:0 32px;">' +
-        '<a href="' + url + '" target="_blank" rel="noopener" style="text-decoration:none;display:grid;grid-template-columns:200px 1fr auto;gap:24px;align-items:start;padding:28px 0;border-bottom:1px solid #E8E8E2;">' +
-        '<span style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:' + A + ';padding-top:3px;">' + label + '</span>' +
-        '<div>' +
-        '<div style="font-size:clamp(15px,1.3vw,18px);font-weight:700;letter-spacing:-0.01em;color:#141412;margin-bottom:' + (desc ? '8px' : '0') + ';">' + title + '</div>' +
-        (meta ? '<div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#6B6B64;margin-bottom:' + (desc ? '10px' : '0') + ';">' + meta + '</div>' : '') +
-        (desc ? '<div style="font-size:13px;line-height:1.65;color:#6B6B64;max-width:64ch;">' + desc + '</div>' : '') +
-        '</div>' +
-        '<span style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid ' + A + ';padding-bottom:2px;color:#141412;white-space:nowrap;margin-top:4px;">Read \u2192</span>' +
-        '</a></div>';
-    }
-
-    function accordion(id, label, count, rows) {
-      return '<details id="' + id + '" style="border-bottom:' + BD + ';">' +
-        '<summary style="max-width:1360px;margin:0 auto;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;user-select:none;">' +
-        '<div style="display:flex;align-items:baseline;gap:20px;">' +
-        '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">' + label + '</span>' +
-        '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#141412;font-weight:700;">' + count + ' ' + (count === 1 ? 'title' : 'titles') + '</span>' +
-        '</div>' +
-        '<span class="acc-icon" style="font-size:22px;font-weight:300;color:#141412;line-height:1;">+</span>' +
-        '</summary>' +
-        '<div style="border-top:' + BD + ';">' + rows + '</div>' +
-        '</details>';
-    }
-
-    const bookRows = lib.books.map((b, i) =>
-      accRow('Book \u00b7 ' + String(i + 1).padStart(2, '0'), b.title, b.version || '', b.description || '', b.url)
-    ).join('');
-
-    const paperRows = lib.whitePapers.map((w, i) =>
-      accRow('Paper \u00b7 ' + String(i + 1).padStart(2, '0'), w.title, w.subtitle || '', w.description || '', w.url)
-    ).join('');
-
-    const articleRows = lib.articles.map((a, i) =>
-      accRow('Article \u00b7 ' + String(i + 1).padStart(2, '0'), a.title, a.subtitle || '', a.description || '', a.url)
-    ).join('');
-
-    const total = lib.books.length + lib.whitePapers.length + lib.articles.length;
-
-    const masthead =
-      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
-      '<div style="display:flex;align-items:baseline;gap:20px;">' +
-      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
-      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Research &amp; Analysis</span>' +
-      '</div>' +
-      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + total + ' titles</span>' +
-      '</section>';
-
-    const body = masthead +
-      '<section style="border-bottom:' + BD + ';">' +
-      accordion('acc-books',    'Books',        lib.books.length,       bookRows) +
-      accordion('acc-papers',   'White Papers', lib.whitePapers.length, paperRows) +
-      accordion('acc-articles', 'Articles',     lib.articles.length,    articleRows) +
-      '</section>' +
-      '<script>document.querySelectorAll("details").forEach(function(d){d.addEventListener("toggle",function(){d.querySelector(".acc-icon").textContent=d.open?"\u2212":"+";});});</script>';
-
-    res.send(page('Research & Analysis', 'Research', body));
-  });
+  app.get('/research', (_req, res) => res.redirect(301, '/library'));
 
   // ── RESEARCH ARTICLE HELPER ───────────────────────────────────────────────────
   function resArticlePage(title, num, label, readTime, headline, deck, intro, blocks, closing, ctaHref, ctaLabel) {
