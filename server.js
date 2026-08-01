@@ -121,7 +121,7 @@
   .gw-btn-active  { background:#141412; color:#FAFAF7; }
   .gw-btn-inactive{ background:transparent; color:#141412; }
   .gw-btn-inactive:hover { background:#F1F0EA; }
-  .gw-panel { display:none; text-align:center; display:grid; gap:32px; justify-items:center; max-width:620px; }
+  .gw-panel { display:none; text-align:center; gap:32px; justify-items:center; max-width:620px; }
   .gw-panel.active { display:grid; }
   .gw-cta { text-decoration:none; background:#141412; color:#FAFAF7; padding:20px 44px; font-size:15px; letter-spacing:0.06em; text-transform:uppercase; }
   .gw-cta:hover { background:${A}; }
@@ -161,12 +161,12 @@
       <a href="/individual.html" class="gw-cta">Find your answer →</a>
     </div>
 
-    <div id="panel-institutional" class="gw-panel" style="display:none;">
+    <div id="panel-institutional" class="gw-panel">
       <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Broker/dealers, carriers, recordkeepers, asset managers: deliver the right answer for every household you serve — at scale.</p>
       <a href="/institutional" class="gw-cta">Explore the platform →</a>
     </div>
 
-    <div id="panel-research" class="gw-panel" style="display:none;">
+    <div id="panel-research" class="gw-panel">
       <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Live analysis from the EDGE engine. Three findings you can't get anywhere else — updated continuously from real household data.</p>
       <a href="/what-edge-shows" class="gw-cta">See the analysis →</a>
     </div>
@@ -189,15 +189,12 @@
 <script>
 function pick(track) {
   ['individual','institutional','research'].forEach(function(t) {
-    var btn   = document.getElementById('btn-' + (t === 'individual' ? 'ind' : t === 'institutional' ? 'inst' : 'res'));
+    var isActive = (t === track);
+    var btnId = t === 'individual' ? 'btn-ind' : t === 'institutional' ? 'btn-inst' : 'btn-res';
+    document.getElementById(btnId).className = 'gw-btn ' + (isActive ? 'gw-btn-active' : 'gw-btn-inactive');
     var panel = document.getElementById('panel-' + t);
-    if (t === track) {
-      btn.className   = 'gw-btn gw-btn-active';
-      panel.style.display = 'grid';
-    } else {
-      btn.className   = 'gw-btn gw-btn-inactive';
-      panel.style.display = 'none';
-    }
+    if (isActive) { panel.classList.add('active'); }
+    else          { panel.classList.remove('active'); }
   });
 }
 </script>`;
