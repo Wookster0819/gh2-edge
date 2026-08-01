@@ -6,10 +6,8 @@ channel = "stable-24_11"
 packages = ["static-web-server"]
 
 [deployment]
-publicDir = "/"
-deploymentTarget = "static"
+deploymentTarget = "autoscale"
 run = ["node", "server.js"]
-build = ["node", "generate-static.js"]
 
 [workflows]
 runButton = "Project"
