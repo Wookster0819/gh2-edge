@@ -38,8 +38,8 @@
     ['For Individuals',    '/individual.html'],
     ['How It Works',       '/how-it-works.html'],
     ['What Edge Shows',    '/what-edge-shows'],
+    ['Institutional',      '/institutional'],
     ['Library',            '/library'],
-    ['Case Studies',       '/case-studies'],
     ['Contact',            '/contact.html'],
   ];
 
@@ -110,7 +110,7 @@
   }
 
   // ── home.html → gateway redirect ────────────────────────────────────────────
-  app.get('/home.html', (_req, res) => res.redirect(301, '/'));
+  app.get('/home.html', (_req, res) => res.redirect(301, '/institutional'));
 
   // ── Root: gateway homepage ───────────────────────────────────────────────────
   app.get('/', (_req, res) => {
@@ -163,7 +163,7 @@
 
     <div id="panel-institutional" class="gw-panel" style="display:none;">
       <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Broker/dealers, carriers, recordkeepers, asset managers: deliver the right answer for every household you serve — at scale.</p>
-      <a href="/home.html" class="gw-cta">Explore the platform →</a>
+      <a href="/institutional" class="gw-cta">Explore the platform →</a>
     </div>
 
     <div id="panel-research" class="gw-panel" style="display:none;">
@@ -742,6 +742,68 @@ a{color:inherit;}
     ));
   });
 
+  // ── INSTITUTIONAL ────────────────────────────────────────────────────────────
+  app.get('/case-studies', (_req, res) => res.redirect(301, '/institutional'));
+  app.get('/case-studies/embed/:slug', async (req, res) => {
+    // keep the proxy route working even when reached directly
+    return res.redirect(301, '/institutional/embed/' + req.params.slug);
+  });
+
+  app.get('/institutional/embed/:slug', async (req, res) => {
+    let data;
+    try { data = await getCaseStudies(); }
+    catch(e) { return res.status(502).send('Could not load manifest'); }
+    const panel = (data.panels || []).find(p => p.slug === req.params.slug);
+    if (!panel) return res.status(404).send('Panel not found');
+    try {
+      const upstream = await fetch(panel.embedUrl + '?t=' + Date.now(),
+        { headers: { 'Cache-Control': 'no-store' } });
+      if (!upstream.ok) return res.status(502).send('Upstream returned ' + upstream.status);
+      const html = await upstream.text();
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-store');
+      res.send(html);
+    } catch(e) { res.status(502).send('Proxy error: ' + e.message); }
+  });
+
+  app.get('/institutional', async (_req, res) => {
+    let data;
+    try { data = await getCaseStudies(); }
+    catch(e) { return res.send(errPage('Institutional', 'Could not load case studies: ' + e.message)); }
+
+    const panels = data.panels || [];
+    const A = '#C43A1E', BD = '1px solid #141412';
+
+    const masthead =
+      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
+      '<div style="display:flex;flex-direction:column;gap:16px;">' +
+      '<div style="display:flex;align-items:baseline;gap:20px;">' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Institutional</span>' +
+      '</div>' +
+      '<h1 style="margin:0;font-size:clamp(36px,4.5vw,64px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:22ch;">The right answer for every household<span style="color:' + A + ';">.</span></h1>' +
+      '<p style="margin:0;font-size:clamp(15px,1.4vw,19px);line-height:1.55;color:#6B6B64;max-width:52ch;">Broker/dealers, carriers, recordkeepers, asset managers: see the engine at work — measured in lifetime after-tax dollars.</p>' +
+      '</div>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;align-self:flex-start;margin-top:8px;">' + panels.length + ' ' + (panels.length === 1 ? 'panel' : 'panels') + '</span>' +
+      '</section>';
+
+    const panelSections = panels.map((p, i) =>
+      '<section style="border-bottom:' + BD + ';">' +
+      '<div style="max-width:1360px;margin:0 auto;padding:32px 32px 0;display:flex;align-items:baseline;gap:20px;">' +
+      '<span style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:' + A + ';">Case Study \u00b7 ' + String(i + 1).padStart(2, '0') + '</span>' +
+      '<span style="font-size:clamp(15px,1.4vw,19px);font-weight:700;letter-spacing:-0.01em;color:#141412;">' + p.title + '</span>' +
+      '</div>' +
+      '<div style="margin-top:24px;border-top:' + BD + ';">' +
+      '<iframe src="/institutional/embed/' + p.slug + '" ' +
+      'style="width:100%;border:none;display:block;min-height:600px;" ' +
+      'loading="lazy" ' +
+      'title="' + p.title.replace(/"/g, '&quot;') + '">' +
+      '</iframe></div></section>'
+    ).join('');
+
+    res.send(page('Institutional', 'Institutional', masthead + panelSections));
+  });
+
   // ── LIBRARY ──────────────────────────────────────────────────────────────────
   app.get('/library', async (_req, res) => {
     let lib;
@@ -812,63 +874,6 @@ a{color:inherit;}
     res.send(page('Library', 'Library', body));
   });
 
-  // ── CASE STUDIES — proxy embed (strips blob-storage CSP so scripts run) ──────
-  app.get('/case-studies/embed/:slug', async (req, res) => {
-    let data;
-    try { data = await getCaseStudies(); }
-    catch(e) { return res.status(502).send('Could not load manifest'); }
-
-    const panel = (data.panels || []).find(p => p.slug === req.params.slug);
-    if (!panel) return res.status(404).send('Panel not found');
-
-    try {
-      const upstream = await fetch(panel.embedUrl + '?t=' + Date.now(),
-        { headers: { 'Cache-Control': 'no-store' } });
-      if (!upstream.ok) return res.status(502).send('Upstream returned ' + upstream.status);
-      const html = await upstream.text();
-      // Serve from our domain — do NOT forward the blob CSP header
-      res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.setHeader('Cache-Control', 'no-store');
-      res.send(html);
-    } catch(e) {
-      res.status(502).send('Proxy error: ' + e.message);
-    }
-  });
-
-  // ── CASE STUDIES — index page ─────────────────────────────────────────────────
-  app.get('/case-studies', async (_req, res) => {
-    let data;
-    try { data = await getCaseStudies(); }
-    catch(e) { return res.send(errPage('Case Studies', 'Could not load case studies: ' + e.message)); }
-
-    const panels = data.panels || [];
-    const A = '#C43A1E', BD = '1px solid #141412';
-
-    const masthead =
-      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
-      '<div style="display:flex;align-items:baseline;gap:20px;">' +
-      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
-      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Case Studies</span>' +
-      '</div>' +
-      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + panels.length + ' ' + (panels.length === 1 ? 'panel' : 'panels') + '</span>' +
-      '</section>';
-
-    const panelSections = panels.map((p, i) =>
-      '<section style="border-bottom:' + BD + ';">' +
-      '<div style="max-width:1360px;margin:0 auto;padding:32px 32px 0;display:flex;align-items:baseline;gap:20px;">' +
-      '<span style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:' + A + ';">Case Study \u00b7 ' + String(i+1).padStart(2,'0') + '</span>' +
-      '<span style="font-size:clamp(15px,1.4vw,19px);font-weight:700;letter-spacing:-0.01em;color:#141412;">' + p.title + '</span>' +
-      '</div>' +
-      '<div style="margin-top:24px;border-top:' + BD + ';">' +
-      '<iframe src="/case-studies/embed/' + p.slug + '" ' +
-      'style="width:100%;border:none;display:block;min-height:600px;" ' +
-      'loading="lazy" ' +
-      'title="' + p.title.replace(/"/g,'&quot;') + '">' +
-      '</iframe></div></section>'
-    ).join('');
-
-    res.send(page('Case Studies', 'Case Studies', masthead + panelSections));
-  });
 
   // ── Start ────────────────────────────────────────────────────────────────────
   // When run directly (node server.js), start the HTTP server.
