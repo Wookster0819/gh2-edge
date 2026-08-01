@@ -597,53 +597,80 @@ a{color:inherit;}
     '<div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">Read the article \u2192</div></a>';
   }
 
-  app.get('/research', (_req, res) => {
+  // ── LIBRARY JSON (fetched once, cached in memory) ────────────────────────────
+  let _libraryCache = null;
+  async function getLibrary() {
+    if (_libraryCache) return _libraryCache;
+    const r = await fetch('https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library.json');
+    _libraryCache = await r.json();
+    return _libraryCache;
+  }
+
+  app.get('/research', async (_req, res) => {
+    let lib;
+    try { lib = await getLibrary(); } catch(e) { lib = { books: [], whitePapers: [], articles: [] }; }
+
+    const A = '#C43A1E';
+    const BD = '1px solid #141412';
+
+    function accRow(label, title, meta, desc, url) {
+      return '<div style="max-width:1360px;margin:0 auto;padding:0 32px;">' +
+        '<a href="' + url + '" target="_blank" rel="noopener" style="text-decoration:none;display:grid;grid-template-columns:200px 1fr auto;gap:24px;align-items:start;padding:28px 0;border-bottom:1px solid #E8E8E2;">' +
+        '<span style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:' + A + ';padding-top:3px;">' + label + '</span>' +
+        '<div>' +
+        '<div style="font-size:clamp(15px,1.3vw,18px);font-weight:700;letter-spacing:-0.01em;color:#141412;margin-bottom:' + (desc ? '8px' : '0') + ';">' + title + '</div>' +
+        (meta ? '<div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#6B6B64;margin-bottom:' + (desc ? '10px' : '0') + ';">' + meta + '</div>' : '') +
+        (desc ? '<div style="font-size:13px;line-height:1.65;color:#6B6B64;max-width:64ch;">' + desc + '</div>' : '') +
+        '</div>' +
+        '<span style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid ' + A + ';padding-bottom:2px;color:#141412;white-space:nowrap;margin-top:4px;">Read \u2192</span>' +
+        '</a></div>';
+    }
+
+    function accordion(id, label, count, rows) {
+      return '<details id="' + id + '" style="border-bottom:' + BD + ';">' +
+        '<summary style="max-width:1360px;margin:0 auto;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;user-select:none;">' +
+        '<div style="display:flex;align-items:baseline;gap:20px;">' +
+        '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">' + label + '</span>' +
+        '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#141412;font-weight:700;">' + count + ' ' + (count === 1 ? 'title' : 'titles') + '</span>' +
+        '</div>' +
+        '<span class="acc-icon" style="font-size:22px;font-weight:300;color:#141412;line-height:1;">+</span>' +
+        '</summary>' +
+        '<div style="border-top:' + BD + ';">' + rows + '</div>' +
+        '</details>';
+    }
+
+    const bookRows = lib.books.map((b, i) =>
+      accRow('Book \u00b7 ' + String(i + 1).padStart(2, '0'), b.title, b.version || '', b.description || '', b.url)
+    ).join('');
+
+    const paperRows = lib.whitePapers.map((w, i) =>
+      accRow('Paper \u00b7 ' + String(i + 1).padStart(2, '0'), w.title, w.subtitle || '', w.description || '', w.url)
+    ).join('');
+
+    const articleRows = lib.articles.map((a, i) =>
+      accRow('Article \u00b7 ' + String(i + 1).padStart(2, '0'), a.title, a.subtitle || '', a.description || '', a.url)
+    ).join('');
+
+    const total = lib.books.length + lib.whitePapers.length + lib.articles.length;
+
     const masthead =
-      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:1px solid #141412;display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
+      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
       '<div style="display:flex;align-items:baseline;gap:20px;">' +
       '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
-      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Retirement Readiness Survey</span>' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Research &amp; Analysis</span>' +
       '</div>' +
-      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">Vol. I \u00b7 Jul 2026</span>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + total + ' titles</span>' +
       '</section>';
 
-    const featured =
-      '<a href="/what-edge-shows/findings" style="text-decoration:none;display:block;padding:52px 40px;background:#141412;color:#FAFAF7;height:100%;">' +
-      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:24px;">Survey Overview \u00b7 Jul 2026</div>' +
-      '<h2 style="margin:0 0 28px;font-size:clamp(26px,2.8vw,42px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;max-width:18ch;">Retirement, Read Plainly<span style="color:#C43A1E;">.</span></h2>' +
-      '<p style="margin:0 0 40px;font-size:clamp(15px,1.4vw,18px);line-height:1.6;color:#A9A9A0;max-width:36ch;">Most people feel ready to retire. Most people haven\u2019t checked. Six things the survey told us and what they mean for anyone within a decade of the finish line.</p>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid #2e2e2e;border-left:1px solid #2e2e2e;margin-bottom:48px;">' +
-      ['3 in 4\nFeel Ready', '#1\nTrust Barrier', '1 in 3\nBelow the Cliff', '1 in 5\nNo Target', '#1 Fear\nOutliving Savings', '8 in 10\nWant Income'].map(s => {
-        const [stat, label] = s.split('\n');
-        return '<div style="border-right:1px solid #2e2e2e;border-bottom:1px solid #2e2e2e;padding:20px 16px;">' +
-          '<div style="font-size:clamp(20px,1.8vw,26px);font-weight:700;color:#C43A1E;letter-spacing:-0.02em;">' + stat + '</div>' +
-          '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6B6B64;margin-top:4px;">' + label + '</div></div>';
-      }).join('') +
-      '</div>' +
-      '<div style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;color:#FAFAF7;">Read the full findings \u2192</div>' +
-      '</a>';
+    const body = masthead +
+      '<section style="border-bottom:' + BD + ';">' +
+      accordion('acc-books',    'Books',        lib.books.length,       bookRows) +
+      accordion('acc-papers',   'White Papers', lib.whitePapers.length, paperRows) +
+      accordion('acc-articles', 'Articles',     lib.articles.length,    articleRows) +
+      '</section>' +
+      '<script>document.querySelectorAll("details").forEach(function(d){d.addEventListener("toggle",function(){d.querySelector(".acc-icon").textContent=d.open?"\u2212":"+";});});</script>';
 
-    const sidebar =
-      resCard('Article \u00b7 01', '/research/confidence-gap',
-        'The Confidence Gap',
-        '3 in 4 feel ready. 1 in 3 are below the cliff. The gap between perceived and actual readiness is the survey\u2019s most striking finding.') +
-      resCard('Article \u00b7 02', '/research/trust-barrier',
-        'The Trust Problem',
-        '\u201CI don\u2019t know whom to trust\u201D beats cost as the #1 thing stopping people from getting help. The industry has an identity problem.') +
-      '<a href="/research/missing-tools" style="text-decoration:none;background:#FAFAF7;padding:32px 28px;display:block;">' +
-      '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:12px;">Article \u00b7 03</div>' +
-      '<h3 style="margin:0 0 12px;font-size:clamp(16px,1.4vw,20px);line-height:1.2;letter-spacing:-0.01em;font-weight:700;">The Missing Tools</h3>' +
-      '<p style="margin:0 0 20px;font-size:13px;line-height:1.6;color:#6B6B64;">8 in 10 want guaranteed lifetime income. Almost none understand the tool that delivers it. A gap worth closing before it\u2019s a product worth selling.</p>' +
-      '<div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">Read the article \u2192</div></a>';
-
-    const grid =
-      '<section style="border-bottom:1px solid #141412;">' +
-      '<div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:3fr 2fr;gap:0;border-left:1px solid #141412;border-right:1px solid #141412;">' +
-      '<div style="border-right:1px solid #141412;">' + featured + '</div>' +
-      '<div style="display:grid;grid-template-rows:1fr 1fr 1fr;">' + sidebar + '</div>' +
-      '</div></section>';
-
-    res.send(page('Retirement Readiness Survey', 'Research', masthead + grid));
+    res.send(page('Research & Analysis', 'Research', body));
   });
 
   // ── RESEARCH ARTICLE HELPER ───────────────────────────────────────────────────
