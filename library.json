@@ -1,0 +1,238 @@
+{
+  "_note": "Manifest for gettheedge.com. PDFs live in blob storage (see url); this file is the only thing in git. Descriptions from summaries.json.",
+  "books": [
+    {
+      "title": "Book 3 — What 7.76 Billion Scenarios Reveal",
+      "version": "v4.0",
+      "file": "Book3-What-7.76-Billion-Scenarios-Reveal-v4.0.pdf",
+      "path": "library/books/Book3-What-7.76-Billion-Scenarios-Reveal-v4.0.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/books/Book3-What-7.76-Billion-Scenarios-Reveal-v4.0.pdf",
+      "description": ""
+    },
+    {
+      "title": "Book 5 — Who Are You?",
+      "version": "v1.0",
+      "file": "Book5-Who-Are-You-v1.0.pdf",
+      "path": "library/books/Book5-Who-Are-You-v1.0.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/books/Book5-Who-Are-You-v1.0.pdf",
+      "description": ""
+    },
+    {
+      "title": "Book 6 — 50 Retirement Mistakes",
+      "version": "v2.1",
+      "file": "Book6-50-Retirement-Mistakes-v2.1.pdf",
+      "path": "library/books/Book6-50-Retirement-Mistakes-v2.1.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/books/Book6-50-Retirement-Mistakes-v2.1.pdf",
+      "description": ""
+    },
+    {
+      "title": "Book 9 — Start Where You Are",
+      "version": "Beginner's Edition",
+      "file": "Book9-Start-Where-You-Are-Beginners-Edition-v1.1.pdf",
+      "path": "library/books/Book9-Start-Where-You-Are-Beginners-Edition-v1.1.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/books/Book9-Start-Where-You-Are-Beginners-Edition-v1.1.pdf",
+      "description": ""
+    },
+    {
+      "title": "Book 10 — When Wealth Is Coupled (HNW)",
+      "version": "v0.1 draft",
+      "file": "Book10-When-Wealth-Is-Coupled-HNW-v0.1-DRAFT.pdf",
+      "path": "library/books/Book10-When-Wealth-Is-Coupled-HNW-v0.1-DRAFT.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/books/Book10-When-Wealth-Is-Coupled-HNW-v0.1-DRAFT.pdf",
+      "description": ""
+    },
+    {
+      "title": "Book 11 — When Care Is Coupled (Mass-Affluent)",
+      "version": "v0.1 draft",
+      "file": "Book11-When-Care-Is-Coupled-MassAffluent-v0.1-DRAFT.pdf",
+      "path": "library/books/Book11-When-Care-Is-Coupled-MassAffluent-v0.1-DRAFT.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/books/Book11-When-Care-Is-Coupled-MassAffluent-v0.1-DRAFT.pdf",
+      "description": ""
+    },
+    {
+      "title": "Book 4 — How 7.76 Billion Scenarios Get Built",
+      "version": "v6.0",
+      "file": "Book4-How-7.76-Billion-Scenarios-Get-Built-v6.0.pdf",
+      "path": "library/books/Book4-How-7.76-Billion-Scenarios-Get-Built-v6.0.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/books/Book4-How-7.76-Billion-Scenarios-Get-Built-v6.0.pdf",
+      "description": ""
+    },
+    {
+      "title": "Book 7 — GH2 EDGE Analysis Series (Expert)",
+      "version": "v2",
+      "file": "Book7-GH2-EDGE-Analysis-Series-Expert-v2-CORRECTED.pdf",
+      "path": "library/books/Book7-GH2-EDGE-Analysis-Series-Expert-v2-CORRECTED.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/books/Book7-GH2-EDGE-Analysis-Series-Expert-v2-CORRECTED.pdf",
+      "description": ""
+    }
+  ],
+  "articles": [
+    {
+      "slug": "The-Widows-Walk",
+      "title": "The Widow's Walk",
+      "subtitle": null,
+      "description": "When a spouse dies, household income drops but the tax rate on it often rises — single tax brackets are about half as wide, and the Medicare surcharge line is cut nearly in half. It has a name, the Widow's Penalty, and most of the moves that soften it must be made while both spouses are alive. A good paper can tell you the penalty is real; it can't tell you, for your own house and savings, how much it will cost.",
+      "companion": null,
+      "path": "library/articles/The-Widows-Walk.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/The-Widows-Walk.pdf"
+    },
+    {
+      "slug": "The-Honesty-Factor",
+      "title": "The Honesty Factor",
+      "subtitle": null,
+      "description": "A retirement tool is only trustworthy on its big numbers if it will also report the small, unimpressive ones — telling a comfortable couple they kept $346,000 more, and a tight household that its money simply runs short. Real money is usually lost not to exotic tactics but to two ordinary failures: leaving the pre-65 ACA health subsidy out of the math, and never evaluating the interlocking decisions together. The engine measures; it does not replace the advisor, and the answer needs refreshing as life changes.",
+      "companion": null,
+      "path": "library/articles/The-Honesty-Factor.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/The-Honesty-Factor.pdf"
+    },
+    {
+      "slug": "Your-Income-Decides-Your-Healthcare-Bill",
+      "title": "Your Income Decides Your Healthcare Bill",
+      "subtitle": null,
+      "description": "You don't pay for retirement healthcare in one lump sum — you pay a monthly bill from income, and your income quietly sets that price by driving your ACA subsidy before 65, your Medicare surcharge after, and the tax on your Social Security all at once. Because those bills move together with every withdrawal and Roth conversion, no sequential calculator can untangle them. What actually decides whether you can retire is not gross income but what's left after taxes and healthcare — and the right levers still depend on your health and state.",
+      "companion": [
+        "Resolving Circular Dependencies in Coupled Regulatory Systems",
+        "The formal treatment — how income, the ACA subsidy, Medicare, and Social Security taxation resolve against one another at once."
+      ],
+      "path": "library/articles/Your-Income-Decides-Your-Healthcare-Bill.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/Your-Income-Decides-Your-Healthcare-Bill.pdf"
+    },
+    {
+      "slug": "The-Annuity-Knows-Your-Age",
+      "title": "The Annuity Knows Your Age. It Doesn't Know You.",
+      "subtitle": null,
+      "description": "A target-date fund's built-in annuity decides when and how much of your savings to turn into lifetime income — off a glide path keyed to nothing but your birthday. The age and amount that actually help depend on your taxes, health, Social Security, and survivor picture pulling on each other at once. Measured that way the right amount is sometimes real and sometimes zero — and only a tool with no annuity to sell can tell you which.",
+      "companion": [
+        "When Should a Household Annuitize?",
+        "The formal treatment — resolving the annuitization-timing puzzle with person-level, coupled-regime measurement."
+      ],
+      "path": "library/articles/The-Annuity-Knows-Your-Age.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/The-Annuity-Knows-Your-Age.pdf"
+    },
+    {
+      "slug": "The-Family-Conversation",
+      "title": "The Family Conversation Is a Beginning, Not a Plan",
+      "subtitle": null,
+      "description": "The family conversation about long-term care is a necessary step forward, but a single sticker figure like $680,000 is the wrong anchor: real exposure is a coupled tax-and-Medicare problem, occurring in a specific state, with probabilities attached. That $680,000 is a right-tail case; the expected cost for the same household is closer to $90,000–$110,000, and the number swings widely by state. The honest plan asks for the expected-value cost, the survivor-phase math, and the return the plan actually needs — not one number taken on faith.",
+      "companion": null,
+      "path": "library/articles/The-Family-Conversation.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/The-Family-Conversation.pdf"
+    },
+    {
+      "slug": "Retirement-After-Divorce",
+      "title": "Retirement After Divorce",
+      "subtitle": null,
+      "description": "Divorcing at retirement age isn't one financial event — it flips your tax filing, home-sale exclusion, Medicare surcharges, Social Security taxation, and estate rules all at once, and a one-thing-at-a-time calculator misses how those changes cascade into each other. This piece reads four real divorced retirees from a Wall Street Journal series to show why the largest costs hide in the ripple effects, not the divorce itself. It is analytical commentary, not advice for any specific household.",
+      "companion": null,
+      "path": "library/articles/Retirement-After-Divorce.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/Retirement-After-Divorce.pdf"
+    },
+    {
+      "slug": "The-Checklist-and-the-Engine",
+      "title": "The Checklist and the Engine",
+      "subtitle": null,
+      "description": "A widely-shared retirement article gets the direction right but ends, as most do, with a to-do list — because the tools available can't actually solve the household's problem, where taxes, Medicare surcharges, Social Security, and account withdrawals all feed back into each other year after year. The one number that settles it — the return the plan actually needs to survive — is never produced. The honest caveat: the author did the best job possible without measurement infrastructure that can resolve all of that at once.",
+      "companion": [
+        "Resolving Circular Dependencies in Coupled Regulatory Systems",
+        "The formal treatment — why a checklist can't solve rules that feed back into each other, and what can."
+      ],
+      "path": "library/articles/The-Checklist-and-the-Engine.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/The-Checklist-and-the-Engine.pdf"
+    },
+    {
+      "slug": "Four-Frontier-Models-Zero-Solvers",
+      "title": "Four Frontier Models. Zero Coupled Solvers.",
+      "subtitle": null,
+      "description": "We gave ChatGPT, Claude, Gemini, and Grok the same 100 households and scored 800 of their retirement recommendations through a real engine; all four matched the best strategy only 0 to 2 percent of the time. The catch that matters: most of their picks don't blow the plan up — they are just wrong, leaving the typical household about $75,000 poorer, and hitting hardest the modest-wealth, poor-health families the models sound most confident advising.",
+      "companion": [
+        "Four Frontier Models — The Mechanism",
+        "The formal case — why a language model structurally cannot resolve a coupled retirement plan: it narrates strategies, it doesn't run them."
+      ],
+      "path": "library/articles/Four-Frontier-Models-Zero-Solvers.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/Four-Frontier-Models-Zero-Solvers.pdf"
+    },
+    {
+      "slug": "The-2032-Social-Security-Question",
+      "title": "The 2032 Social Security Question",
+      "subtitle": "If your benefits are cut, does your retirement plan need to change? For most people, less than you'd think — for some, more.",
+      "description": "If Social Security benefits are trimmed around 2032 — the figures discussed run about 22 to 28 percent — it barely changes when you should claim (only about 7 percent of people would switch), but it changes what you do with your money for roughly one household in seven, heaviest on people already retired. The counterintuitive part: households in poor health change their plans the least yet are hurt most in dollars, because they were already running the plan a cut demands. These are early estimates that may shift a point or two, but the direction is clear.",
+      "companion": null,
+      "path": "library/articles/The-2032-Social-Security-Question.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/articles/The-2032-Social-Security-Question.pdf"
+    }
+  ],
+  "whitePapers": [
+    {
+      "slug": "Four-Frontier-Models-The-Mechanism",
+      "title": "Four Frontier Models — The Mechanism",
+      "subtitle": "The formal case for why a language model structurally cannot solve a coupled retirement plan: it narrates strategies, it doesn't resolve them.",
+      "description": "Across 800 retirement recommendations from four frontier language models, the models pick the engine's strategy only 0–2% of the time and not one produced a year-by-year plan, Required IRR, or feasibility classification. This paper argues the gap is categorical: an LLM is a text-completion machine, while a planning engine is a nested-convergence machine — outer bisection on Required IRR wrapping inner Gauss-Seidel resolution of the coupled regimes. Larger models and retrieval do not close it; the two systems are complements, not substitutes.",
+      "path": "library/white-papers/Four-Frontier-Models-The-Mechanism.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/Four-Frontier-Models-The-Mechanism.pdf"
+    },
+    {
+      "slug": "LLMs-and-Retirement-Planning-Engines",
+      "title": "LLMs and Retirement Planning Engines: An Empirical Comparison",
+      "subtitle": "Four Frontier Language Models vs GH2 EDGE\\u2122 Across 100 Stratified US Households",
+      "description": "We scored 800 retirement-distribution recommendations — four frontier LLMs across two personas and 100 stratified US households — through the same coupled-regulatory engine that produced each benchmark. Strategy agreement between any model and the engine is 0–2%, none of the 800 responses contained a Required IRR, feasibility rating, or year-by-year plan, and following the model's pick costs the median household on the order of $75,000 in dollars kept. LLMs describe strategies; engines run them — a difference in kind, not quality.",
+      "path": "library/white-papers/LLMs-and-Retirement-Planning-Engines.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/LLMs-and-Retirement-Planning-Engines.pdf"
+    },
+    {
+      "slug": "MRQ-Market-Reliance-Quotient",
+      "title": "MRQ — Market Reliance Quotient",
+      "subtitle": "A per-household measure of how much a plan's outcome depends on the market.",
+      "description": "MRQ (Market Reliance Quotient) is a per-household number measuring how much a plan's optimal strategy depends on the market behaving as assumed — the change in Required IRR per percentage point of equity-return assumption, computed from small perturbations. In the v6.3 sample, over half of households have an MRQ of zero: their winning strategy does not change under market shifts. This empirically tests Monte Carlo's core premise, and finds that for most households market variability is not what determines whether the plan succeeds.",
+      "path": "library/white-papers/MRQ-Market-Reliance-Quotient.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/MRQ-Market-Reliance-Quotient.pdf"
+    },
+    {
+      "slug": "Resolving-Circular-Dependencies",
+      "title": "Resolving Circular Dependencies in Coupled Regulatory Systems",
+      "subtitle": "A General Framework for Person-Level Social Welfare Optimization",
+      "description": "This paper formalizes coupled tax-benefit systems as a fixed-point problem on a directed graph of regulatory rules, and proves that single-pass sequential evaluation cannot produce a self-consistent solution when the graph contains cycles, while iterated Gauss-Seidel converges only under contraction conditions that fail at benefit cliffs and premium tiers. It situates the result within existing fixed-point theory and microsimulation, then formalizes person-level welfare optimization and the cost of representative-agent shortcuts, with US retirement as the canonical seven-regime reference implementation.",
+      "path": "library/white-papers/Resolving-Circular-Dependencies.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/Resolving-Circular-Dependencies.pdf"
+    },
+    {
+      "slug": "When-Should-a-Household-Annuitize",
+      "title": "When Should a Household Annuitize?",
+      "subtitle": "Resolving the Annuitization-Timing Puzzle with Person-Level, Coupled-Regime Measurement",
+      "description": "This paper argues that much of the annuitization puzzle is a measurement artifact: every standard retirement metric — Monte Carlo success, safe-withdrawal, terminal wealth, Required IRR — is an asset-survival metric that structurally penalizes annuitization, whose whole mechanism is to convert liquid assets into a guaranteed floor. Using a coupled-regime engine and a welfare metric based on expected essential shortfall, it finds annuitization reduces that exposure for every household studied, with optimal timing being as late as the portfolio can afford to bridge to — varying by years across health, state, and funding.",
+      "path": "library/white-papers/When-Should-a-Household-Annuitize.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/When-Should-a-Household-Annuitize.pdf"
+    },
+    {
+      "slug": "The-Negative-Rate-Paradox",
+      "title": "The Negative Rate Paradox",
+      "subtitle": "When Safety Costs More Than Risk — How Negative Forward Rates Invert Retirement Strategy",
+      "description": "This paper follows negative forward interest rates to their conclusion at the household level and shows that when the risk-free rate crosses zero, the core assumptions of retirement planning invert — bonds become the riskiest holding, early Roth conversions can destroy value, and longevity turns into a pure liability, so the healthiest retiree can face the worst outcome. Because these inversions hit each person differently by health, wealth, age, and state, only personalized computation ranks strategies correctly.",
+      "path": "library/white-papers/The-Negative-Rate-Paradox.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/The-Negative-Rate-Paradox.pdf"
+    },
+    {
+      "slug": "Policy-Microsimulation-and-Optimal-Policy-Search",
+      "title": "Policy Microsimulation & Optimal Policy Search",
+      "subtitle": "Person-Level Optimization Across a Census-Representative Synthetic Population",
+      "description": "This specification lays out an end-to-end methodology for evaluating US retirement-relevant tax and benefit policy on a census-representative synthetic population, re-optimizing each household's response — withdrawal, Roth conversion, Social Security claiming — under each candidate policy before aggregating. It distinguishes the approach from CBO/JCT/Treasury practice on three counts: per-household optimization, complete coupled regulatory simulation across the interacting regimes, and welfare-maximizing policy search over the parameter space. The document details data sources, statistical-matching design, the architecture, the welfare mathematics, and validation targets against published aggregates.",
+      "path": "library/white-papers/Policy-Microsimulation-and-Optimal-Policy-Search.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/Policy-Microsimulation-and-Optimal-Policy-Search.pdf"
+    },
+    {
+      "slug": "Securitizing-the-ACA-Federal",
+      "title": "Securitizing the ACA",
+      "subtitle": "How the Bond Market Can Make Health Coverage Affordable and Make Medicaid Do What It Was Designed to Do",
+      "description": "This paper proposes applying credit-card-style asset-backed securitization to ACA premium and Medicaid-expansion cash flows: the bond market funds the predictable portion at tax-exempt municipal rates, private reinsurance absorbs the middle layer, CMS holds the first-loss equity position calibrated to the high-variance cohort Medicaid exists to protect, and carriers convert to third-party administrators as they already are in most large employer plans. The authors offer an order-of-magnitude savings estimate on the expansion population, routed to enrollees as compressed premiums — a proposal whose feasibility hinges on a loss-distribution calibration the paper frames as the next step.",
+      "path": "library/white-papers/Securitizing-the-ACA-Federal.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/Securitizing-the-ACA-Federal.pdf"
+    },
+    {
+      "slug": "Securitizing-the-ACA-State-Path",
+      "title": "Securitizing the ACA — The State Path",
+      "subtitle": "How a Single State Can Implement Healthcare Securitization Without Federal Authorization",
+      "description": "This paper shows how a single state could implement ACA cash-flow securitization within its own borders — without new federal legislation — using the Section 1332 State Innovation Waiver and the state revenue-authority bond vehicle already used to securitize tobacco-settlement payments, with state Medicaid holding the high-variance equity tranche under continued federal matching. It argues the binding constraint is a credible coordinated carrier refusal, and proposes five layers of operational redundancy so the structure can ship without legacy carriers, drawing a cautionary lesson from Washington's Cascade Care.",
+      "path": "library/white-papers/Securitizing-the-ACA-State-Path.pdf",
+      "url": "https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library/white-papers/Securitizing-the-ACA-State-Path.pdf"
+    }
+  ]
+}
