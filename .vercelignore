@@ -5,3 +5,4 @@ replit.nix
 .local
 .agents
 *.log
+*.html
