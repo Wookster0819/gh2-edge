@@ -760,6 +760,7 @@ a{color:inherit;}
     } catch(e) { res.status(502).send('Proxy error: ' + e.message); }
   });
 
+  // ── Case-study gallery ────────────────────────────────────────────────────────
   app.get('/institutional', async (_req, res) => {
     let data;
     try { data = await getCaseStudies(); }
@@ -769,33 +770,106 @@ a{color:inherit;}
     const A = '#C43A1E', BD = '1px solid #141412';
 
     const masthead =
-      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
+      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 48px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
       '<div style="display:flex;flex-direction:column;gap:16px;">' +
       '<div style="display:flex;align-items:baseline;gap:20px;">' +
       '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
-      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Institutional</span>' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Case Studies</span>' +
       '</div>' +
       '<h1 style="margin:0;font-size:clamp(36px,4.5vw,64px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:22ch;">The right answer for every household<span style="color:' + A + ';">.</span></h1>' +
       '<p style="margin:0;font-size:clamp(15px,1.4vw,19px);line-height:1.55;color:#6B6B64;max-width:52ch;">Broker/dealers, carriers, recordkeepers, asset managers: see the engine at work — measured in lifetime after-tax dollars.</p>' +
       '</div>' +
-      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;align-self:flex-start;margin-top:8px;">' + panels.length + ' ' + (panels.length === 1 ? 'panel' : 'panels') + '</span>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;align-self:flex-start;margin-top:8px;">' + panels.length + '\u00a0' + (panels.length === 1 ? 'panel' : 'panels') + '</span>' +
       '</section>';
 
-    const panelSections = panels.map((p, i) =>
-      '<section style="border-bottom:' + BD + ';">' +
-      '<div style="max-width:1360px;margin:0 auto;padding:32px 32px 0;display:flex;align-items:baseline;gap:20px;">' +
-      '<span style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:' + A + ';">Case Study \u00b7 ' + String(i + 1).padStart(2, '0') + '</span>' +
-      '<span style="font-size:clamp(15px,1.4vw,19px);font-weight:700;letter-spacing:-0.01em;color:#141412;">' + p.title + '</span>' +
-      '</div>' +
-      '<div style="margin-top:24px;border-top:' + BD + ';">' +
-      '<iframe src="/institutional/embed/' + p.slug + '" ' +
-      'style="width:100%;border:none;display:block;min-height:600px;" ' +
-      'loading="lazy" ' +
-      'title="' + p.title.replace(/"/g, '&quot;') + '">' +
-      '</iframe></div></section>'
-    ).join('');
+    // Tile grid — each tile links to /institutional/:slug
+    const tileStyles =
+      '<style>' +
+      '.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:0;padding:0;}' +
+      '.cs-tile{display:block;text-decoration:none;border-right:1px solid #141412;border-bottom:1px solid #141412;background:#FAFAF7;transition:background 0.15s;}' +
+      '.cs-tile:nth-child(odd):last-child{grid-column:1/-1;max-width:50%;}' +
+      '.cs-tile:hover{background:#F1F0EA;}' +
+      '.cs-tile:hover .cs-arrow{opacity:1;transform:translateX(0);}' +
+      '.cs-thumb{position:relative;overflow:hidden;aspect-ratio:16/9;border-bottom:1px solid #141412;background:#EDECE5;}' +
+      '.cs-thumb iframe{width:400%;height:400%;border:none;transform:scale(0.25);transform-origin:top left;pointer-events:none;display:block;}' +
+      '.cs-thumb-num{position:absolute;bottom:12px;right:16px;font-size:clamp(48px,6vw,80px);font-weight:700;line-height:1;letter-spacing:-0.04em;color:rgba(20,20,18,0.08);pointer-events:none;user-select:none;}' +
+      '.cs-body{padding:24px 28px 28px;}' +
+      '.cs-label{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:#C43A1E;margin-bottom:12px;}' +
+      '.cs-title{font-size:clamp(17px,1.6vw,22px);font-weight:700;line-height:1.2;letter-spacing:-0.02em;color:#141412;margin:0 0 20px;}' +
+      '.cs-footer{display:flex;align-items:center;justify-content:space-between;}' +
+      '.cs-arrow{font-size:13px;letter-spacing:0.08em;color:#C43A1E;opacity:0;transform:translateX(-6px);transition:opacity 0.18s,transform 0.18s;}' +
+      '@media(max-width:640px){.cs-grid{grid-template-columns:1fr;}.cs-tile:nth-child(odd):last-child{max-width:100%;}}' +
+      '</style>';
 
-    res.send(page('Institutional', 'Institutional', masthead + panelSections));
+    const tiles = panels.map((p, i) => {
+      const num = String(i + 1).padStart(2, '0');
+      return '<a href="/institutional/' + p.slug + '" class="cs-tile">' +
+        '<div class="cs-thumb">' +
+        '<iframe src="/institutional/embed/' + p.slug + '" loading="lazy" title="' + p.title.replace(/"/g, '&quot;') + ' preview" tabindex="-1" aria-hidden="true"></iframe>' +
+        '<span class="cs-thumb-num">' + num + '</span>' +
+        '</div>' +
+        '<div class="cs-body">' +
+        '<div class="cs-label">Case Study\u00a0\u00b7\u00a0' + num + '</div>' +
+        '<h2 class="cs-title">' + p.title + '</h2>' +
+        '<div class="cs-footer">' +
+        '<span style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#9B9B94;">Interactive panel</span>' +
+        '<span class="cs-arrow">View panel \u2192</span>' +
+        '</div>' +
+        '</div>' +
+        '</a>';
+    }).join('');
+
+    const gallery =
+      '<div style="max-width:1360px;margin:0 auto;border-left:1px solid #141412;">' +
+      tileStyles +
+      '<div class="cs-grid">' + tiles + '</div>' +
+      '</div>';
+
+    res.send(page('Case Studies', 'Institutional', masthead + gallery));
+  });
+
+  // ── Case-study panel detail page ──────────────────────────────────────────────
+  app.get('/institutional/:slug', async (req, res) => {
+    const slug = req.params.slug;
+    let data;
+    try { data = await getCaseStudies(); }
+    catch(e) { return res.send(errPage('Case Study', 'Could not load manifest: ' + e.message)); }
+
+    const panels = data.panels || [];
+    const panel  = panels.find(p => p.slug === slug);
+    if (!panel) return res.status(404).send(errPage('Not Found', 'No panel found for "' + slug + '".'));
+
+    const idx    = panels.indexOf(panel);
+    const num    = String(idx + 1).padStart(2, '0');
+    const A      = '#C43A1E', BD = '1px solid #141412';
+
+    const prev = idx > 0             ? panels[idx - 1] : null;
+    const next = idx < panels.length - 1 ? panels[idx + 1] : null;
+
+    const masthead =
+      '<section style="max-width:1360px;margin:0 auto;padding:32px 32px 28px;border-bottom:' + BD + ';display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">' +
+      '<div style="display:flex;align-items:center;gap:20px;">' +
+      '<a href="/institutional" style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;text-decoration:none;">\u2190 Case Studies</a>' +
+      '<span style="color:#E0DFD8;">|</span>' +
+      '<span style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:' + A + ';">Case Study\u00a0\u00b7\u00a0' + num + '</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:24px;">' +
+      (prev ? '<a href="/institutional/' + prev.slug + '" style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#6B6B64;text-decoration:none;">\u2190 Prev</a>' : '') +
+      (next ? '<a href="/institutional/' + next.slug + '" style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#6B6B64;text-decoration:none;">Next \u2192</a>' : '') +
+      '</div>' +
+      '</section>' +
+      '<section style="max-width:1360px;margin:0 auto;padding:48px 32px 36px;border-bottom:' + BD + ';">' +
+      '<h1 style="margin:0;font-size:clamp(28px,3.5vw,52px);line-height:1.05;letter-spacing:-0.025em;font-weight:700;max-width:28ch;">' + panel.title + '<span style="color:' + A + ';">.</span></h1>' +
+      '</section>';
+
+    const iframeSection =
+      '<div style="border-bottom:' + BD + ';">' +
+      '<iframe src="/institutional/embed/' + slug + '" ' +
+      'style="width:100%;border:none;display:block;min-height:700px;" ' +
+      'title="' + panel.title.replace(/"/g, '&quot;') + '">' +
+      '</iframe></div>';
+
+    res.send(page(panel.title, 'Institutional', masthead + iframeSection));
   });
 
   // ── LIBRARY ──────────────────────────────────────────────────────────────────
