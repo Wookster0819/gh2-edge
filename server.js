@@ -38,6 +38,8 @@
     ['For Individuals',    '/individual.html'],
     ['How It Works',       '/how-it-works.html'],
     ['What Edge Shows',    '/what-edge-shows'],
+    ['Library',            '/library'],
+    ['Case Studies',       '/case-studies'],
     ['Contact',            '/contact.html'],
   ];
 
@@ -597,13 +599,21 @@ a{color:inherit;}
     '<div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">Read the article \u2192</div></a>';
   }
 
-  // ── LIBRARY JSON (fetched once, cached in memory) ────────────────────────────
-  let _libraryCache = null;
+  // ── LIBRARY + CASE-STUDIES JSON (fetched live, no server cache) ─────────────
+  const BLOB = 'https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com';
+
   async function getLibrary() {
-    if (_libraryCache) return _libraryCache;
-    const r = await fetch('https://j8jwbg91djjmmn4u.public.blob.vercel-storage.com/library.json');
-    _libraryCache = await r.json();
-    return _libraryCache;
+    const r = await fetch(BLOB + '/library.json?t=' + Date.now(),
+      { headers: { 'Cache-Control': 'no-store' } });
+    if (!r.ok) throw new Error('library.json returned ' + r.status);
+    return r.json();
+  }
+
+  async function getCaseStudies() {
+    const r = await fetch(BLOB + '/case-studies.json?t=' + Date.now(),
+      { headers: { 'Cache-Control': 'no-store' } });
+    if (!r.ok) throw new Error('case-studies.json returned ' + r.status);
+    return r.json();
   }
 
   app.get('/research', async (_req, res) => {
@@ -795,6 +805,134 @@ a{color:inherit;}
       '/individual.html',
       'Find your answer'
     ));
+  });
+
+  // ── LIBRARY ──────────────────────────────────────────────────────────────────
+  app.get('/library', async (_req, res) => {
+    let lib;
+    try { lib = await getLibrary(); }
+    catch(e) { return res.send(errPage('Library', 'Could not load library: ' + e.message)); }
+
+    const A = '#C43A1E', BD = '1px solid #141412', BDL = '1px solid #E8E8E2';
+
+    function card(label, item, idx) {
+      const bullets = (item.bullets && item.bullets.length)
+        ? '<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">' +
+          item.bullets.map(b =>
+            '<li style="font-size:12px;line-height:1.55;color:#6B6B64;padding-left:14px;position:relative;">' +
+            '<span style="position:absolute;left:0;top:6px;width:5px;height:5px;background:' + A + ';display:inline-block;"></span>' +
+            b + '</li>'
+          ).join('') + '</ul>'
+        : (item.description
+            ? '<p style="margin:0;font-size:12px;line-height:1.6;color:#6B6B64;">' + item.description + '</p>'
+            : '');
+      const meta = item.subtitle || item.version || '';
+      return '<a href="' + item.url + '" target="_blank" rel="noopener" ' +
+        'style="text-decoration:none;display:flex;flex-direction:column;border:' + BD + ';background:#FAFAF7;transition:box-shadow 0.15s;" ' +
+        'onmouseover="this.style.boxShadow=\'0 4px 24px rgba(20,20,18,0.10)\'" onmouseout="this.style.boxShadow=\'none\'">' +
+        (item.coverUrl
+          ? '<div style="border-bottom:' + BD + ';overflow:hidden;aspect-ratio:17/22;background:#F1F0EA;">' +
+            '<img src="' + item.coverUrl + '" alt="' + item.title.replace(/"/g,'&quot;') + '" ' +
+            'style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy"></div>'
+          : '') +
+        '<div style="padding:20px 20px 24px;flex:1;display:flex;flex-direction:column;gap:10px;">' +
+        '<span style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:' + A + ';">' + label + '</span>' +
+        '<div style="font-size:15px;font-weight:700;line-height:1.25;letter-spacing:-0.01em;color:#141412;">' + item.title + '</div>' +
+        (meta ? '<div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + meta + '</div>' : '') +
+        (bullets ? '<div style="margin-top:4px;">' + bullets + '</div>' : '') +
+        '<div style="margin-top:auto;padding-top:14px;">' +
+        '<span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:2px solid ' + A + ';padding-bottom:2px;color:#141412;">Download \u2192</span>' +
+        '</div></div></a>';
+    }
+
+    function section(sectionLabel, items, typePrefix) {
+      if (!items || !items.length) return '';
+      const grid = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px;padding:32px 32px 48px;max-width:1360px;margin:0 auto;">' +
+        items.map((item, i) => card(typePrefix + ' \u00b7 ' + String(i+1).padStart(2,'0'), item, i)).join('') +
+        '</div>';
+      return '<section style="border-bottom:' + BD + ';">' +
+        '<div style="max-width:1360px;margin:0 auto;padding:32px 32px 24px;display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:' + BD + ';">' +
+        '<div style="display:flex;align-items:baseline;gap:20px;">' +
+        '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">' + sectionLabel + '</span>' +
+        '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#141412;font-weight:700;">' + items.length + ' ' + (items.length === 1 ? 'title' : 'titles') + '</span>' +
+        '</div></div>' +
+        grid + '</section>';
+    }
+
+    const total = (lib.books||[]).length + (lib.whitePapers||[]).length + (lib.articles||[]).length;
+    const masthead =
+      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
+      '<div style="display:flex;align-items:baseline;gap:20px;">' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Library</span>' +
+      '</div>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + total + ' titles</span>' +
+      '</section>';
+
+    const body = masthead +
+      section('Books',        lib.books      || [], 'Book') +
+      section('White Papers', lib.whitePapers || [], 'Paper') +
+      section('Articles',     lib.articles   || [], 'Article');
+
+    res.send(page('Library', 'Library', body));
+  });
+
+  // ── CASE STUDIES — proxy embed (strips blob-storage CSP so scripts run) ──────
+  app.get('/case-studies/embed/:slug', async (req, res) => {
+    let data;
+    try { data = await getCaseStudies(); }
+    catch(e) { return res.status(502).send('Could not load manifest'); }
+
+    const panel = (data.panels || []).find(p => p.slug === req.params.slug);
+    if (!panel) return res.status(404).send('Panel not found');
+
+    try {
+      const upstream = await fetch(panel.embedUrl + '?t=' + Date.now(),
+        { headers: { 'Cache-Control': 'no-store' } });
+      if (!upstream.ok) return res.status(502).send('Upstream returned ' + upstream.status);
+      const html = await upstream.text();
+      // Serve from our domain — do NOT forward the blob CSP header
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-store');
+      res.send(html);
+    } catch(e) {
+      res.status(502).send('Proxy error: ' + e.message);
+    }
+  });
+
+  // ── CASE STUDIES — index page ─────────────────────────────────────────────────
+  app.get('/case-studies', async (_req, res) => {
+    let data;
+    try { data = await getCaseStudies(); }
+    catch(e) { return res.send(errPage('Case Studies', 'Could not load case studies: ' + e.message)); }
+
+    const panels = data.panels || [];
+    const A = '#C43A1E', BD = '1px solid #141412';
+
+    const masthead =
+      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
+      '<div style="display:flex;align-items:baseline;gap:20px;">' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Case Studies</span>' +
+      '</div>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + panels.length + ' ' + (panels.length === 1 ? 'panel' : 'panels') + '</span>' +
+      '</section>';
+
+    const panelSections = panels.map((p, i) =>
+      '<section style="border-bottom:' + BD + ';">' +
+      '<div style="max-width:1360px;margin:0 auto;padding:32px 32px 0;display:flex;align-items:baseline;gap:20px;">' +
+      '<span style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:' + A + ';">Case Study \u00b7 ' + String(i+1).padStart(2,'0') + '</span>' +
+      '<span style="font-size:clamp(15px,1.4vw,19px);font-weight:700;letter-spacing:-0.01em;color:#141412;">' + p.title + '</span>' +
+      '</div>' +
+      '<div style="margin-top:24px;border-top:' + BD + ';">' +
+      '<iframe src="/case-studies/embed/' + p.slug + '" ' +
+      'style="width:100%;border:none;display:block;min-height:600px;" ' +
+      'loading="lazy" ' +
+      'title="' + p.title.replace(/"/g,'&quot;') + '">' +
+      '</iframe></div></section>'
+    ).join('');
+
+    res.send(page('Case Studies', 'Case Studies', masthead + panelSections));
   });
 
   // ── Start ────────────────────────────────────────────────────────────────────
