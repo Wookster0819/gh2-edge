@@ -229,9 +229,6 @@ a{color:inherit;}
     ));
   });
 
-  // ── Static files ────────────────────────────────────────────────────────────
-  app.use(express.static(path.join(__dirname)));
-
   // ── WHAT EDGE SHOWS master ──────────────────────────────────────────────────
   function card(num, label, href, headline, desc) {
     return '<a href="' + href + '" style="text-decoration:none;background:#FAFAF7;padding:48px 40px;display:block;">' +
@@ -871,6 +868,9 @@ a{color:inherit;}
     res.send(page('Library', 'Library', body));
   });
 
+
+  // ── Static files (after all routes so Express routes take priority) ─────────
+  app.use(express.static(path.join(__dirname)));
 
   // ── Start ────────────────────────────────────────────────────────────────────
   // When run directly (node server.js), start the HTTP server.
