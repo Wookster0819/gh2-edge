@@ -115,90 +115,11 @@
 
   // ── Root: gateway homepage ───────────────────────────────────────────────────
   app.get('/', (_req, res) => {
-    const A = '#C43A1E';
-    const body = `
-<style>
-  .gw-btn { cursor:pointer; padding:18px 48px; font-size:15px; letter-spacing:0.1em; text-transform:uppercase; user-select:none; border:none; font-family:inherit; transition:background 0.1s,color 0.1s; }
-  .gw-btn-active  { background:#141412; color:#FAFAF7; }
-  .gw-btn-inactive{ background:transparent; color:#141412; }
-  .gw-btn-inactive:hover { background:#F1F0EA; }
-  .gw-panel { display:none; text-align:center; gap:32px; justify-items:center; max-width:620px; }
-  .gw-panel.active { display:grid; }
-  .gw-cta { text-decoration:none; background:#141412; color:#FAFAF7; padding:20px 44px; font-size:15px; letter-spacing:0.06em; text-transform:uppercase; }
-  .gw-cta:hover { background:${A}; }
-</style>
-
-<div style="min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;">
-
-  <!-- HEADER (no nav — gateway only) -->
-  <header style="border-bottom:1px solid #141412;">
-    <div style="max-width:1360px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-weight:700;font-size:17px;letter-spacing:0.02em;display:flex;align-items:center;gap:10px;">
-        <span style="width:11px;height:11px;background:${A};display:inline-block;"></span>
-        GH2 EDGE
-      </span>
-      <span style="font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:#6B6B64;">gettheedge.com</span>
-    </div>
-  </header>
-
-  <!-- CENTER -->
-  <main style="max-width:1360px;margin:0 auto;width:100%;box-sizing:border-box;padding:80px 32px;display:grid;align-content:center;justify-items:center;gap:56px;">
-
-    <div style="text-align:center;display:grid;gap:28px;justify-items:center;">
-      <p style="margin:0;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">There is a right retirement answer</p>
-      <h1 style="margin:0;font-size:clamp(44px,5.6vw,84px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:16ch;text-wrap:balance;">Who is the answer for<span style="color:${A};">?</span></h1>
-    </div>
-
-    <!-- TOGGLE -->
-    <div style="display:inline-flex;border:1px solid #141412;background:#FAFAF7;">
-      <button id="btn-ind"  class="gw-btn gw-btn-active"   onclick="pick('individual')">Individual</button>
-      <button id="btn-inst" class="gw-btn gw-btn-inactive" onclick="pick('institutional')">Institutional</button>
-      <button id="btn-res"  class="gw-btn gw-btn-inactive" onclick="pick('research')">Research</button>
-    </div>
-
-    <!-- PANELS -->
-    <div id="panel-individual" class="gw-panel active">
-      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">You're approaching retirement — or already there. Social Security, Medicare, Roth conversions, taxes: your exact situation has already been solved.</p>
-      <a href="/individual.html" class="gw-cta">Find your answer →</a>
-    </div>
-
-    <div id="panel-institutional" class="gw-panel">
-      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Broker/dealers, carriers, recordkeepers, asset managers: deliver the right answer for every household you serve — at scale.</p>
-      <a href="/institutional" class="gw-cta">Explore the platform →</a>
-    </div>
-
-    <div id="panel-research" class="gw-panel">
-      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Live analysis from the EDGE engine. Three findings you can't get anywhere else — updated continuously from real household data.</p>
-      <a href="/what-edge-shows" class="gw-cta">See the analysis →</a>
-    </div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer style="border-top:1px solid #141412;">
-    <div style="max-width:1360px;margin:0 auto;padding:28px 32px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:13px;color:#6B6B64;">
-      <div>GH2 EDGE · Patent Pending · Trade Secret</div>
-      <div style="display:flex;gap:24px;align-items:center;">
-        <a href="/video" style="color:#6B6B64;text-decoration:none;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;" onmouseover="this.style.color='${A}'" onmouseout="this.style.color='#6B6B64'">Video</a>
-        <span>Jae W. Oh, MBA, CFP® · GH2 Benefits LLC</span>
-      </div>
-    </div>
-  </footer>
-
-</div>
-
-<script>
-function pick(track) {
-  ['individual','institutional','research'].forEach(function(t) {
-    var isActive = (t === track);
-    var btnId = t === 'individual' ? 'btn-ind' : t === 'institutional' ? 'btn-inst' : 'btn-res';
-    document.getElementById(btnId).className = 'gw-btn ' + (isActive ? 'gw-btn-active' : 'gw-btn-inactive');
-    var panel = document.getElementById('panel-' + t);
-    if (isActive) { panel.classList.add('active'); }
-    else          { panel.classList.remove('active'); }
-  });
-}
-</script>`;
+    const A = '#C43A1E', BD = '1px solid #141412', BDL = '1px solid #E8E8E2';
+    const body = masthead +
+      section('Books',        lib.books      || [], 'Book') +
+      section('White Papers', lib.whitePapers || [], 'Paper') +
+      section('Articles',     lib.articles   || [], 'Article');
 
     // Gateway uses its own minimal header — bypass the page() nav wrapper
     res.send(`<!DOCTYPE html>
@@ -231,13 +152,35 @@ a{color:inherit;}
   });
 
   // ── WHAT EDGE SHOWS master ──────────────────────────────────────────────────
-  function card(num, label, href, headline, desc) {
-    return '<a href="' + href + '" style="text-decoration:none;background:#FAFAF7;padding:48px 40px;display:block;">' +
-    '<div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:20px;">' + num + ' · ' + label + '</div>' +
-    '<h2 style="margin:0 0 20px;font-size:clamp(22px,2.2vw,32px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;">' + headline + '</h2>' +
-    '<p style="margin:0;font-size:16px;line-height:1.6;color:#6B6B64;">' + desc + '</p>' +
-    '<div style="margin-top:32px;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:2px solid #C43A1E;display:inline-block;padding-bottom:3px;">See the analysis \u2192</div></a>';
-  }
+    function card(label, item, idx) {
+      const bullets = (item.bullets && item.bullets.length)
+        ? '<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">' +
+          item.bullets.map(b =>
+            '<li style="font-size:12px;line-height:1.55;color:#6B6B64;padding-left:14px;position:relative;">' +
+            '<span style="position:absolute;left:0;top:6px;width:5px;height:5px;background:' + A + ';display:inline-block;"></span>' +
+            b + '</li>'
+          ).join('') + '</ul>'
+        : (item.description
+            ? '<p style="margin:0;font-size:12px;line-height:1.6;color:#6B6B64;">' + item.description + '</p>'
+            : '');
+      const meta = item.subtitle || item.version || '';
+      return '<a href="' + item.url + '" target="_blank" rel="noopener" ' +
+        'style="text-decoration:none;display:flex;flex-direction:column;border:' + BD + ';background:#FAFAF7;transition:box-shadow 0.15s;" ' +
+        'onmouseover="this.style.boxShadow=\'0 4px 24px rgba(20,20,18,0.10)\'" onmouseout="this.style.boxShadow=\'none\'">' +
+        (item.coverUrl
+          ? '<div style="border-bottom:' + BD + ';overflow:hidden;aspect-ratio:17/22;background:#F1F0EA;">' +
+            '<img src="' + item.coverUrl + '" alt="' + item.title.replace(/"/g,'&quot;') + '" ' +
+            'style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy"></div>'
+          : '') +
+        '<div style="padding:20px 20px 24px;flex:1;display:flex;flex-direction:column;gap:10px;">' +
+        '<span style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:' + A + ';">' + label + '</span>' +
+        '<div style="font-size:15px;font-weight:700;line-height:1.25;letter-spacing:-0.01em;color:#141412;">' + item.title + '</div>' +
+        (meta ? '<div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + meta + '</div>' : '') +
+        (bullets ? '<div style="margin-top:4px;">' + bullets + '</div>' : '') +
+        '<div style="margin-top:auto;padding-top:14px;">' +
+        '<span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:2px solid ' + A + ';padding-bottom:2px;color:#141412;">Download \u2192</span>' +
+        '</div></div></a>';
+    }
 
   function smallCard(num, label, href, headline, desc) {
     return '<a href="' + href + '" style="text-decoration:none;background:#FAFAF7;padding:32px 28px;display:block;border-bottom:1px solid #141412;">' +
@@ -249,12 +192,12 @@ a{color:inherit;}
 
   app.get('/what-edge-shows', (_req, res) => {
     const masthead =
-      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:1px solid #141412;display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
+      '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
       '<div style="display:flex;align-items:baseline;gap:20px;">' +
       '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
-      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Research &amp; Analysis</span>' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Library</span>' +
       '</div>' +
-      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">Vol. I \u00b7 Jul 2026</span>' +
+      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + total + ' titles</span>' +
       '</section>';
 
     const sectionLabel = (label) =>
@@ -423,8 +366,8 @@ a{color:inherit;}
     const plans2   = d?.blindSpot?.plans    ?? [];
     const disp     = d?.dispersion          ?? {};
     const allPlans = d?.plans               ?? [];
-    const disc     = d?.disclaimer          ?? '';
-    const rights   = d?.rights              ?? '';
+    const disc    = d?.disclaimer ?? '';
+    const rights  = d?.rights     ?? '';
 
     const planCards = plans2.map(p =>
       '<div style="background:#FAFAF7;border-right:1px solid #141412;padding:48px 40px;flex:1;min-width:0;">' +
@@ -447,49 +390,26 @@ a{color:inherit;}
     const disclaimer = (disc||rights) ?
       '<section><div style="max-width:1360px;margin:0 auto;padding:40px 32px;font-size:12px;line-height:1.7;color:#6B6B64;">' +
       (disc  ? '<p style="margin:0 0 8px;">' + disc + '</p>' : '') +
-      (rights ? '<p style="margin:0;">'  + rights + '</p>'  : '') +
-      '</div></section>' : '';
+      (rights ? '<p style="margin:0;">'  + rights + '</p>' : '') + '</div></section>' : '';
 
-    res.send(page('The Blind Spot', 'What Edge Shows',
+    res.send(page('Annuity Protection', 'What Edge Shows',
       '<section style="max-width:1360px;margin:0 auto;padding:88px 32px 72px;border-bottom:1px solid #141412;">' +
-      '<p style="margin:0 0 32px;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">01 · The Blind Spot</p>' +
-      '<h1 style="margin:0;font-size:clamp(40px,5.6vw,84px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:20ch;">' + headline + '</h1></section>' +
-
-      '<section style="border-bottom:1px solid #141412;"><div style="max-width:1360px;margin:0 auto;padding:88px 32px;">' +
-      (plans2.length ? '<div style="display:flex;gap:0;border:1px solid #141412;margin-bottom:56px;">' + planCards + '</div>' : '') +
-      (reading ? '<p style="font-size:clamp(18px,1.8vw,24px);line-height:1.5;max-width:48ch;color:#6B6B64;margin:0;">' + reading + '</p>' : '') +
-      '</div></section>' +
-
-      '<section style="background:#141412;color:#FAFAF7;border-bottom:1px solid #141412;"><div style="max-width:1360px;margin:0 auto;padding:88px 32px;display:grid;grid-template-columns:1fr 1fr;gap:64px;">' +
-      '<div><div style="font-size:clamp(48px,5vw,80px);font-weight:700;letter-spacing:-0.03em;">' + fmt$(disp.spreadDollars) + '</div>' +
-      '<div style="margin-top:10px;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:#A9A9A0;">Spread across all strategies</div></div>' +
-      '<div><div style="font-size:clamp(48px,5vw,80px);font-weight:700;letter-spacing:-0.03em;">' + (disp.plansOver100kBehind||31) +
-      '<span style="font-size:0.45em;font-weight:400;color:#A9A9A0;"> of ' + (disp.plansTotal||32) + '</span></div>' +
-      '<div style="margin-top:10px;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:#A9A9A0;">Plans more than $100k behind #1</div></div></div></section>' +
-
-      (allPlans.length ?
-      '<section style="border-bottom:1px solid #141412;"><div style="max-width:1360px;margin:0 auto;padding:48px 32px;"><details>' +
-      '<summary style="padding:20px 0;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#6B6B64;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #141412;">' +
-      'All ' + allPlans.length + ' strategies ranked \u2014 the industry\u2019s own names<span style="font-size:11px;">\u25b6 expand</span></summary>' +
-      '<div style="overflow-x:auto;margin-top:16px;"><table style="width:100%;border-collapse:collapse;">' +
-      '<thead><tr style="border-bottom:2px solid #141412;">' +
-      '<th style="padding:12px 16px;text-align:left;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;">Strategy</th>' +
-      '<th style="padding:12px 16px;text-align:right;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;">Legacy Kept</th>' +
-      '<th style="padding:12px 16px;text-align:right;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;">Success Score</th>' +
-      '<th style="padding:12px 16px;text-align:right;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#6B6B64;">Gap to #1</th></tr></thead>' +
-      '<tbody>' + planRows + '</tbody></table></div></details></div></section>' : '') +
+      '<p style="margin:0 0 32px;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">02 · Annuity Protection</p>' +
+      '<h1 style="margin:0;font-size:clamp(40px,5.6vw,84px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:20ch;">The metric that makes annuities look wrong is the wrong metric<span style="color:#C43A1E;">.</span></h1>' +
+      '<p style="margin:40px 0 0;font-size:clamp(18px,1.8vw,24px);line-height:1.4;max-width:44ch;color:#6B6B64;">Asset-survival scores stay flat while the shortfall a survivor can\u2019t cover collapses 70\u2013100%.</p></section>' +
+      '<section style="border-bottom:1px solid #141412;"><div style="max-width:1360px;margin:0 auto;padding:64px 32px;">' + sections + '</div></section>' +
       disclaimer));
   });
 
-  // ── ANNUITY PROTECTION ──────────────────────────────────────────────────────
-  app.get('/what-edge-shows/annuity-protection', async (_req, res) => {
+  // ── LIFE INSURANCE COHORTS ──────────────────────────────────────────────────
+  app.get('/what-edge-shows/life-insurance', async (_req, res) => {
     let d;
     try { d = await fetchFeed('https://edge.gh2benefits.com/dashboards/data/annuity-protection.json'); }
     catch (e) { return res.send(errPage('Annuity Protection', e.message)); }
 
     const cells  = d?.cells      ?? [];
-    const disc   = d?.disclaimer ?? '';
-    const rights = d?.rights     ?? '';
+    const disc    = d?.disclaimer ?? '';
+    const rights  = d?.rights     ?? '';
 
     const byNW = {};
     cells.forEach(c => {
@@ -527,7 +447,7 @@ a{color:inherit;}
 
     const disclaimer = (disc||rights) ?
       '<section><div style="max-width:1360px;margin:0 auto;padding:40px 32px;font-size:12px;line-height:1.7;color:#6B6B64;">' +
-      (disc  ? '<p style="margin:0 0 8px;">' + disc + '</p>'  : '') +
+      (disc  ? '<p style="margin:0 0 8px;">' + disc + '</p>' : '') +
       (rights ? '<p style="margin:0;">'  + rights + '</p>' : '') + '</div></section>' : '';
 
     res.send(page('Annuity Protection', 'What Edge Shows',
@@ -549,18 +469,26 @@ a{color:inherit;}
     const disc    = d?.disclaimer ?? '';
     const rights  = d?.rights     ?? '';
 
-    const rows = cohorts.map((c, i) =>
-      '<tr style="border-top:1px solid #E0DFD8;background:' + (i%2===0?'#FAFAF7':'#F4F3EF') + ';">' +
-      '<td style="padding:13px 16px;font-size:13px;">' + (c.earnerType||'') + '</td>' +
-      '<td style="padding:13px 16px;font-size:13px;text-align:right;">' + fmt$(c.income) + '</td>' +
-      '<td style="padding:13px 16px;font-size:13px;text-align:center;">' + (c.kids??0) + '</td>' +
-      '<td style="padding:13px 16px;font-size:13px;">' + (c.home||'') + '</td>' +
-      '<td style="padding:13px 16px;font-size:13px;text-align:right;font-weight:600;">' + fmtGap(c.coverageGapNeeds) + '</td>' +
-      '<td style="padding:13px 16px;font-size:13px;text-align:right;font-weight:600;">' + fmtGap(c.coverageGapContinuity) + '</td>' +
-      '<td style="padding:13px 16px;font-size:13px;text-align:right;color:#6B6B64;">' +
-        (c.requiredReturnNeedsPct != null ? fmtPct(c.requiredReturnNeedsPct) : c.requiredReturnPct != null ? fmtPct(c.requiredReturnPct) : 'n/a') +
-      '</td></tr>'
-    ).join('');
+    const rows = panels.map((p, i) => {
+      const num   = String(i + 1).padStart(2, '0');
+      const intro = intros[p.slug] || '';
+      return '<a href="/institutional/' + p.slug + '" class="cs-row">' +
+        '<div class="cs-row-body">' +
+        '<div class="cs-row-top">' +
+        '<span class="cs-row-label">Case Study\u00a0\u00b7\u00a0' + num + '</span>' +
+        '<h2 class="cs-row-title">' + p.title + '</h2>' +
+        (intro ? '<p class="cs-row-intro">' + intro + '</p>' : '') +
+        '</div>' +
+        '<div class="cs-row-cta">' +
+        '<span class="cs-row-arrow">View panel \u2192</span>' +
+        '</div>' +
+        '</div>' +
+        '<div class="cs-row-thumb">' +
+        '<img src="' + (p.thumbnailUrl || '/institutional/thumbnail/' + p.slug) + '" alt="" aria-hidden="true" loading="lazy" width="360" height="202">' +
+        '<span class="cs-row-num">' + num + '</span>' +
+        '</div>' +
+        '</a>';
+    }).join('');
 
     const disclaimer = (disc||rights) ?
       '<section><div style="max-width:1360px;margin:0 auto;padding:40px 32px;font-size:12px;line-height:1.7;color:#6B6B64;">' +
@@ -761,6 +689,48 @@ a{color:inherit;}
     } catch(e) { res.status(502).send('Proxy error: ' + e.message); }
   });
 
+  // ── Case-study thumbnail (SVG placeholder, replaced by real screenshot when available) ──
+  app.get('/institutional/thumbnail/:slug', async (req, res) => {
+    let data;
+    try { data = await getCaseStudies(); }
+    catch(e) { return res.status(502).send('Could not load manifest'); }
+    const panels = data.caseStudies || [];
+    const panel  = panels.find(p => p.slug === req.params.slug);
+    const title  = panel ? panel.title : req.params.slug;
+    const idx    = panel ? panels.indexOf(panel) : 0;
+    const num    = String(idx + 1).padStart(2, '0');
+
+    const safe = title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+    const words = safe.split(' ');
+    const lines = [];
+    let cur = '';
+    for (const w of words) {
+      if (cur && (cur + ' ' + w).length > 28) { lines.push(cur); cur = w; }
+      else { cur = cur ? cur + ' ' + w : w; }
+    }
+    if (cur) lines.push(cur);
+
+    const lineH = 26;
+    const startY = 120 - ((lines.length - 1) * lineH) / 2;
+    const textLines = lines.map((l, i) =>
+      `<text x="240" y="${startY + i * lineH}" text-anchor="middle" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#141412" letter-spacing="-0.3">${l}</text>`
+    ).join('');
+
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="270" viewBox="0 0 480 270">
+  <rect width="480" height="270" fill="#EDECE5"/>
+  <rect x="0" y="0" width="480" height="3" fill="#C43A1E"/>
+  <text x="24" y="34" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="10" letter-spacing="2.5" text-transform="uppercase" fill="#C43A1E">CASE STUDY · ${num}</text>
+  ${textLines}
+  <text x="24" y="254" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="10" letter-spacing="2" fill="#9B9B94">GH2 EDGE™ · Interactive panel</text>
+  <text x="440" y="254" text-anchor="end" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="38" font-weight="700" fill="rgba(20,20,18,0.06)" letter-spacing="-1">${num}</text>
+</svg>`;
+
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(svg);
+  });
+
   // ── Case-study gallery ────────────────────────────────────────────────────────
   app.get('/institutional', async (_req, res) => {
     let data;
@@ -778,7 +748,7 @@ a{color:inherit;}
       '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Case Studies</span>' +
       '</div>' +
       '<h1 style="margin:0;font-size:clamp(36px,4.5vw,64px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:22ch;">The right answer for every household<span style="color:' + A + ';">.</span></h1>' +
-      '<p style="margin:0;font-size:clamp(15px,1.4vw,19px);line-height:1.55;color:#6B6B64;max-width:52ch;">Broker/dealers, carriers, recordkeepers, asset managers: see the engine at work — measured in lifetime after-tax dollars.</p>' +
+      '<p style="margin:0;font-size:clamp(15px,1.4vw,19px);line-height:1.55;color:#6B6B64;max-width:52ch;">Broker/dealers, carriers, recordkeepers, asset managers: see the engine at work \u2014 measured in lifetime after-tax dollars.</p>' +
       '</div>' +
       '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;align-self:flex-start;margin-top:8px;">' + panels.length + '\u00a0' + (panels.length === 1 ? 'panel' : 'panels') + '</span>' +
       '</section>';
@@ -786,11 +756,11 @@ a{color:inherit;}
     // Short intros keyed by slug — displayed in the gallery row
     const intros = {
       'edge-slider':          'The same household optimized two ways. Drag through retirement age and watch the lifetime dollar gap between an advisor\u2019s plan and the GH2 EDGE optimum grow in real time.',
-      'termlife-value':       'A precise lifetime figure for what term life insurance actually contributes — not a rule of thumb, a number. Measured in after-tax dollars the household keeps.',
+      'termlife-value':       'A precise lifetime figure for what term life insurance actually contributes \u2014 not a rule of thumb, a number. Measured in after-tax dollars the household keeps.',
       'annuity-protection':   'The annuity\u2019s real cost and benefit in the same units: lifetime after-tax spending the household gains or gives up. The green bar shows exactly what it bought.'
     };
 
-    // Row layout — separator between each row, thumbnail on the right
+    // Row layout — thumbnail on the right, lazy-loaded from SVG route (or real blob screenshot)
     const rowStyles =
       '<style>' +
       '.cs-row{display:flex;align-items:stretch;border-bottom:1px solid #141412;text-decoration:none;background:#FAFAF7;transition:background 0.15s;min-height:220px;}' +
@@ -804,7 +774,7 @@ a{color:inherit;}
       '.cs-row-cta{display:flex;align-items:center;gap:12px;}' +
       '.cs-row-arrow{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#C43A1E;opacity:0;transform:translateX(-6px);transition:opacity 0.18s,transform 0.18s;}' +
       '.cs-row-thumb{flex:0 0 360px;position:relative;overflow:hidden;border-left:1px solid #141412;background:#EDECE5;}' +
-      '.cs-row-thumb iframe{width:400%;height:400%;border:none;transform:scale(0.25);transform-origin:top left;pointer-events:none;display:block;position:absolute;top:0;left:0;}' +
+      '.cs-row-thumb img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}' +
       '.cs-row-num{position:absolute;bottom:12px;right:16px;font-size:clamp(56px,6vw,88px);font-weight:700;line-height:1;letter-spacing:-0.04em;color:rgba(20,20,18,0.07);pointer-events:none;user-select:none;}' +
       '@media(max-width:720px){.cs-row{flex-direction:column;}.cs-row-thumb{flex:0 0 200px;border-left:none;border-top:1px solid #141412;}.cs-row-body{padding:28px 24px;}}' +
       '</style>';
@@ -824,7 +794,7 @@ a{color:inherit;}
         '</div>' +
         '</div>' +
         '<div class="cs-row-thumb">' +
-        '<iframe src="/institutional/embed/' + p.slug + '" loading="lazy" title="' + p.title.replace(/"/g, '&quot;') + ' preview" tabindex="-1" aria-hidden="true"></iframe>' +
+        '<img src="' + (p.thumbnailUrl || '/institutional/thumbnail/' + p.slug) + '" alt="" aria-hidden="true" loading="lazy" width="360" height="202">' +
         '<span class="cs-row-num">' + num + '</span>' +
         '</div>' +
         '</a>';
