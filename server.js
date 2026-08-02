@@ -748,7 +748,7 @@ a{color:inherit;}
     let data;
     try { data = await getCaseStudies(); }
     catch(e) { return res.status(502).send('Could not load manifest'); }
-    const panel = (data.panels || []).find(p => p.slug === req.params.slug);
+    const panel = (data.caseStudies || []).find(p => p.slug === req.params.slug);
     if (!panel) return res.status(404).send('Panel not found');
     try {
       const upstream = await fetch(panel.embedUrl + '?t=' + Date.now(),
@@ -767,7 +767,7 @@ a{color:inherit;}
     try { data = await getCaseStudies(); }
     catch(e) { return res.send(errPage('Institutional', 'Could not load case studies: ' + e.message)); }
 
-    const panels = data.panels || [];
+    const panels = data.caseStudies || [];
     const A = '#C43A1E', BD = '1px solid #141412';
 
     const masthead =
@@ -836,7 +836,7 @@ a{color:inherit;}
     try { data = await getCaseStudies(); }
     catch(e) { return res.send(errPage('Case Study', 'Could not load manifest: ' + e.message)); }
 
-    const panels = data.panels || [];
+    const panels = data.caseStudies || [];
     const panel  = panels.find(p => p.slug === slug);
     if (!panel) return res.status(404).send(errPage('Not Found', 'No panel found for "' + slug + '".'));
 
