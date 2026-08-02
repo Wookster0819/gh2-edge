@@ -109,8 +109,9 @@
     return fmt$(v);
   }
 
-  // ── home.html → gateway redirect ────────────────────────────────────────────
-  app.get('/home.html', (_req, res) => res.redirect(301, '/institutional'));
+  // ── legacy HTML file redirects ───────────────────────────────────────────────
+  app.get('/index.html', (_req, res) => res.redirect(301, '/'));
+  app.get('/home.html',  (_req, res) => res.redirect(301, '/institutional'));
 
   // ── Root: gateway homepage ───────────────────────────────────────────────────
   app.get('/', (_req, res) => {
