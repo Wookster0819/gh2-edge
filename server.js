@@ -783,47 +783,57 @@ a{color:inherit;}
       '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;align-self:flex-start;margin-top:8px;">' + panels.length + '\u00a0' + (panels.length === 1 ? 'panel' : 'panels') + '</span>' +
       '</section>';
 
-    // Tile grid — each tile links to /institutional/:slug
-    const tileStyles =
+    // Short intros keyed by slug — displayed in the gallery row
+    const intros = {
+      'edge-slider':          'The same household optimized two ways. Drag through retirement age and watch the lifetime dollar gap between an advisor\u2019s plan and the GH2 EDGE optimum grow in real time.',
+      'termlife-value':       'A precise lifetime figure for what term life insurance actually contributes — not a rule of thumb, a number. Measured in after-tax dollars the household keeps.',
+      'annuity-protection':   'The annuity\u2019s real cost and benefit in the same units: lifetime after-tax spending the household gains or gives up. The green bar shows exactly what it bought.'
+    };
+
+    // Row layout — separator between each row, thumbnail on the right
+    const rowStyles =
       '<style>' +
-      '.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:0;padding:0;}' +
-      '.cs-tile{display:block;text-decoration:none;border-right:1px solid #141412;border-bottom:1px solid #141412;background:#FAFAF7;transition:background 0.15s;}' +
-      '.cs-tile:nth-child(odd):last-child{grid-column:1/-1;max-width:50%;}' +
-      '.cs-tile:hover{background:#F1F0EA;}' +
-      '.cs-tile:hover .cs-arrow{opacity:1;transform:translateX(0);}' +
-      '.cs-thumb{position:relative;overflow:hidden;aspect-ratio:16/9;border-bottom:1px solid #141412;background:#EDECE5;}' +
-      '.cs-thumb iframe{width:400%;height:400%;border:none;transform:scale(0.25);transform-origin:top left;pointer-events:none;display:block;}' +
-      '.cs-thumb-num{position:absolute;bottom:12px;right:16px;font-size:clamp(48px,6vw,80px);font-weight:700;line-height:1;letter-spacing:-0.04em;color:rgba(20,20,18,0.08);pointer-events:none;user-select:none;}' +
-      '.cs-body{padding:24px 28px 28px;}' +
-      '.cs-label{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:#C43A1E;margin-bottom:12px;}' +
-      '.cs-title{font-size:clamp(17px,1.6vw,22px);font-weight:700;line-height:1.2;letter-spacing:-0.02em;color:#141412;margin:0 0 20px;}' +
-      '.cs-footer{display:flex;align-items:center;justify-content:space-between;}' +
-      '.cs-arrow{font-size:13px;letter-spacing:0.08em;color:#C43A1E;opacity:0;transform:translateX(-6px);transition:opacity 0.18s,transform 0.18s;}' +
-      '@media(max-width:640px){.cs-grid{grid-template-columns:1fr;}.cs-tile:nth-child(odd):last-child{max-width:100%;}}' +
+      '.cs-row{display:flex;align-items:stretch;border-bottom:1px solid #141412;text-decoration:none;background:#FAFAF7;transition:background 0.15s;min-height:220px;}' +
+      '.cs-row:hover{background:#F1F0EA;}' +
+      '.cs-row:hover .cs-row-arrow{opacity:1;transform:translateX(0);}' +
+      '.cs-row-body{flex:1;padding:40px 48px 40px 32px;display:flex;flex-direction:column;justify-content:space-between;gap:20px;min-width:0;}' +
+      '.cs-row-top{display:flex;flex-direction:column;gap:14px;}' +
+      '.cs-row-label{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:#C43A1E;}' +
+      '.cs-row-title{margin:0;font-size:clamp(20px,2vw,28px);font-weight:700;line-height:1.15;letter-spacing:-0.025em;color:#141412;}' +
+      '.cs-row-intro{margin:0;font-size:15px;line-height:1.65;color:#6B6B64;max-width:58ch;}' +
+      '.cs-row-cta{display:flex;align-items:center;gap:12px;}' +
+      '.cs-row-arrow{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#C43A1E;opacity:0;transform:translateX(-6px);transition:opacity 0.18s,transform 0.18s;}' +
+      '.cs-row-thumb{flex:0 0 360px;position:relative;overflow:hidden;border-left:1px solid #141412;background:#EDECE5;}' +
+      '.cs-row-thumb iframe{width:400%;height:400%;border:none;transform:scale(0.25);transform-origin:top left;pointer-events:none;display:block;position:absolute;top:0;left:0;}' +
+      '.cs-row-num{position:absolute;bottom:12px;right:16px;font-size:clamp(56px,6vw,88px);font-weight:700;line-height:1;letter-spacing:-0.04em;color:rgba(20,20,18,0.07);pointer-events:none;user-select:none;}' +
+      '@media(max-width:720px){.cs-row{flex-direction:column;}.cs-row-thumb{flex:0 0 200px;border-left:none;border-top:1px solid #141412;}.cs-row-body{padding:28px 24px;}}' +
       '</style>';
 
-    const tiles = panels.map((p, i) => {
-      const num = String(i + 1).padStart(2, '0');
-      return '<a href="/institutional/' + p.slug + '" class="cs-tile">' +
-        '<div class="cs-thumb">' +
+    const rows = panels.map((p, i) => {
+      const num   = String(i + 1).padStart(2, '0');
+      const intro = intros[p.slug] || '';
+      return '<a href="/institutional/' + p.slug + '" class="cs-row">' +
+        '<div class="cs-row-body">' +
+        '<div class="cs-row-top">' +
+        '<span class="cs-row-label">Case Study\u00a0\u00b7\u00a0' + num + '</span>' +
+        '<h2 class="cs-row-title">' + p.title + '</h2>' +
+        (intro ? '<p class="cs-row-intro">' + intro + '</p>' : '') +
+        '</div>' +
+        '<div class="cs-row-cta">' +
+        '<span class="cs-row-arrow">View panel \u2192</span>' +
+        '</div>' +
+        '</div>' +
+        '<div class="cs-row-thumb">' +
         '<iframe src="/institutional/embed/' + p.slug + '" loading="lazy" title="' + p.title.replace(/"/g, '&quot;') + ' preview" tabindex="-1" aria-hidden="true"></iframe>' +
-        '<span class="cs-thumb-num">' + num + '</span>' +
-        '</div>' +
-        '<div class="cs-body">' +
-        '<div class="cs-label">Case Study\u00a0\u00b7\u00a0' + num + '</div>' +
-        '<h2 class="cs-title">' + p.title + '</h2>' +
-        '<div class="cs-footer">' +
-        '<span style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#9B9B94;">Interactive panel</span>' +
-        '<span class="cs-arrow">View panel \u2192</span>' +
-        '</div>' +
+        '<span class="cs-row-num">' + num + '</span>' +
         '</div>' +
         '</a>';
     }).join('');
 
     const gallery =
-      '<div style="max-width:1360px;margin:0 auto;border-left:1px solid #141412;">' +
-      tileStyles +
-      '<div class="cs-grid">' + tiles + '</div>' +
+      '<div style="max-width:1360px;margin:0 auto;">' +
+      rowStyles +
+      rows +
       '</div>';
 
     res.send(page('Case Studies', 'Institutional', masthead + gallery));
