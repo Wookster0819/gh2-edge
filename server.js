@@ -772,7 +772,7 @@ a{color:inherit;}
       '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
       '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Case Studies</span>' +
       '</div>' +
-      '<h1 style="margin:0;font-size:clamp(36px,4.5vw,64px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:22ch;">The right answer for every household<span style="color:' + A + ';">.</span></h1>' +
+      '<h1 style="margin:0;font-size:clamp(36px,4.5vw,64px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:22ch;">EDGE proves and creates your value<span style="color:' + A + ';">.</span></h1>' +
       '<p style="margin:0;font-size:clamp(15px,1.4vw,19px);line-height:1.55;color:#6B6B64;max-width:52ch;">Broker/dealers, carriers, recordkeepers, asset managers: see the engine at work \u2014 measured in lifetime after-tax dollars.</p>' +
       '</div>' +
       '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;align-self:flex-start;margin-top:8px;">' + panels.length + '\u00a0' + (panels.length === 1 ? 'panel' : 'panels') + '</span>' +
