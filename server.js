@@ -115,11 +115,90 @@
 
   // ── Root: gateway homepage ───────────────────────────────────────────────────
   app.get('/', (_req, res) => {
-    const A = '#C43A1E', BD = '1px solid #141412', BDL = '1px solid #E8E8E2';
-    const body = masthead +
-      section('Books',        lib.books      || [], 'Book') +
-      section('White Papers', lib.whitePapers || [], 'Paper') +
-      section('Articles',     lib.articles   || [], 'Article');
+    const A = '#C43A1E';
+    const body = `
+<style>
+  .gw-btn { cursor:pointer; padding:18px 48px; font-size:15px; letter-spacing:0.1em; text-transform:uppercase; user-select:none; border:none; font-family:inherit; transition:background 0.1s,color 0.1s; }
+  .gw-btn-active  { background:#141412; color:#FAFAF7; }
+  .gw-btn-inactive{ background:transparent; color:#141412; }
+  .gw-btn-inactive:hover { background:#F1F0EA; }
+  .gw-panel { display:none; text-align:center; gap:32px; justify-items:center; max-width:620px; }
+  .gw-panel.active { display:grid; }
+  .gw-cta { text-decoration:none; background:#141412; color:#FAFAF7; padding:20px 44px; font-size:15px; letter-spacing:0.06em; text-transform:uppercase; }
+  .gw-cta:hover { background:${A}; }
+</style>
+
+<div style="min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;">
+
+  <!-- HEADER (no nav — gateway only) -->
+  <header style="border-bottom:1px solid #141412;">
+    <div style="max-width:1360px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-weight:700;font-size:17px;letter-spacing:0.02em;display:flex;align-items:center;gap:10px;">
+        <span style="width:11px;height:11px;background:${A};display:inline-block;"></span>
+        GH2 EDGE
+      </span>
+      <span style="font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:#6B6B64;">gettheedge.com</span>
+    </div>
+  </header>
+
+  <!-- CENTER -->
+  <main style="max-width:1360px;margin:0 auto;width:100%;box-sizing:border-box;padding:80px 32px;display:grid;align-content:center;justify-items:center;gap:56px;">
+
+    <div style="text-align:center;display:grid;gap:28px;justify-items:center;">
+      <p style="margin:0;font-size:12px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">There is a right retirement answer</p>
+      <h1 style="margin:0;font-size:clamp(44px,5.6vw,84px);line-height:1.0;letter-spacing:-0.03em;font-weight:700;max-width:16ch;text-wrap:balance;">Who is the answer for<span style="color:${A};">?</span></h1>
+    </div>
+
+    <!-- TOGGLE -->
+    <div style="display:inline-flex;border:1px solid #141412;background:#FAFAF7;">
+      <button id="btn-ind"  class="gw-btn gw-btn-active"   onclick="pick('individual')">Individual</button>
+      <button id="btn-inst" class="gw-btn gw-btn-inactive" onclick="pick('institutional')">Institutional</button>
+      <button id="btn-res"  class="gw-btn gw-btn-inactive" onclick="pick('research')">Research</button>
+    </div>
+
+    <!-- PANELS -->
+    <div id="panel-individual" class="gw-panel active">
+      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">You're approaching retirement — or already there. Social Security, Medicare, Roth conversions, taxes: your exact situation has already been solved.</p>
+      <a href="/individual.html" class="gw-cta">Find your answer →</a>
+    </div>
+
+    <div id="panel-institutional" class="gw-panel">
+      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Broker/dealers, carriers, recordkeepers, asset managers: deliver the right answer for every household you serve — at scale.</p>
+      <a href="/institutional" class="gw-cta">Explore the platform →</a>
+    </div>
+
+    <div id="panel-research" class="gw-panel">
+      <p style="margin:0;font-size:clamp(19px,1.9vw,26px);line-height:1.45;color:#141412;">Live analysis from the EDGE engine. Three findings you can't get anywhere else — updated continuously from real household data.</p>
+      <a href="/what-edge-shows" class="gw-cta">See the analysis →</a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid #141412;">
+    <div style="max-width:1360px;margin:0 auto;padding:28px 32px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:13px;color:#6B6B64;">
+      <div>GH2 EDGE · Patent Pending · Trade Secret</div>
+      <div style="display:flex;gap:24px;align-items:center;">
+        <a href="/video" style="color:#6B6B64;text-decoration:none;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;" onmouseover="this.style.color='${A}'" onmouseout="this.style.color='#6B6B64'">Video</a>
+        <span>Jae W. Oh, MBA, CFP® · GH2 Benefits LLC</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+function pick(track) {
+  ['individual','institutional','research'].forEach(function(t) {
+    var isActive = (t === track);
+    var btnId = t === 'individual' ? 'btn-ind' : t === 'institutional' ? 'btn-inst' : 'btn-res';
+    document.getElementById(btnId).className = 'gw-btn ' + (isActive ? 'gw-btn-active' : 'gw-btn-inactive');
+    var panel = document.getElementById('panel-' + t);
+    if (isActive) { panel.classList.add('active'); }
+    else          { panel.classList.remove('active'); }
+  });
+}
+</script>`;
 
     // Gateway uses its own minimal header — bypass the page() nav wrapper
     res.send(`<!DOCTYPE html>
@@ -152,36 +231,6 @@ a{color:inherit;}
   });
 
   // ── WHAT EDGE SHOWS master ──────────────────────────────────────────────────
-    function card(label, item, idx) {
-      const bullets = (item.bullets && item.bullets.length)
-        ? '<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">' +
-          item.bullets.map(b =>
-            '<li style="font-size:12px;line-height:1.55;color:#6B6B64;padding-left:14px;position:relative;">' +
-            '<span style="position:absolute;left:0;top:6px;width:5px;height:5px;background:' + A + ';display:inline-block;"></span>' +
-            b + '</li>'
-          ).join('') + '</ul>'
-        : (item.description
-            ? '<p style="margin:0;font-size:12px;line-height:1.6;color:#6B6B64;">' + item.description + '</p>'
-            : '');
-      const meta = item.subtitle || item.version || '';
-      return '<a href="' + item.url + '" target="_blank" rel="noopener" ' +
-        'style="text-decoration:none;display:flex;flex-direction:column;border:' + BD + ';background:#FAFAF7;transition:box-shadow 0.15s;" ' +
-        'onmouseover="this.style.boxShadow=\'0 4px 24px rgba(20,20,18,0.10)\'" onmouseout="this.style.boxShadow=\'none\'">' +
-        (item.coverUrl
-          ? '<div style="border-bottom:' + BD + ';overflow:hidden;aspect-ratio:17/22;background:#F1F0EA;">' +
-            '<img src="' + item.coverUrl + '" alt="' + item.title.replace(/"/g,'&quot;') + '" ' +
-            'style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy"></div>'
-          : '') +
-        '<div style="padding:20px 20px 24px;flex:1;display:flex;flex-direction:column;gap:10px;">' +
-        '<span style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:' + A + ';">' + label + '</span>' +
-        '<div style="font-size:15px;font-weight:700;line-height:1.25;letter-spacing:-0.01em;color:#141412;">' + item.title + '</div>' +
-        (meta ? '<div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + meta + '</div>' : '') +
-        (bullets ? '<div style="margin-top:4px;">' + bullets + '</div>' : '') +
-        '<div style="margin-top:auto;padding-top:14px;">' +
-        '<span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:2px solid ' + A + ';padding-bottom:2px;color:#141412;">Download \u2192</span>' +
-        '</div></div></a>';
-    }
-
   function smallCard(num, label, href, headline, desc) {
     return '<a href="' + href + '" style="text-decoration:none;background:#FAFAF7;padding:32px 28px;display:block;border-bottom:1px solid #141412;">' +
     '<div style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#C43A1E;margin-bottom:12px;">' + num + ' \u00b7 ' + label + '</div>' +
@@ -191,13 +240,13 @@ a{color:inherit;}
   }
 
   app.get('/what-edge-shows', (_req, res) => {
+    const BD = '1px solid #141412';
     const masthead =
       '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
       '<div style="display:flex;align-items:baseline;gap:20px;">' +
       '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">GH2 EDGE\u2122</span>' +
-      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">Library</span>' +
+      '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#141412;font-weight:700;">What Edge Shows</span>' +
       '</div>' +
-      '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + total + ' titles</span>' +
       '</section>';
 
     const sectionLabel = (label) =>
