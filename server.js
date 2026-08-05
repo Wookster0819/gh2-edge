@@ -935,7 +935,28 @@ a{color:inherit;}
         grid + '</section>';
     }
 
-    const total = (lib.books||[]).length + (lib.whitePapers||[]).length + (lib.articles||[]).length + (lib.tearSheets||[]).length;
+    // Display names and card-label prefixes for known keys.
+    // Any key not listed here falls back to title-cased camelCase automatically.
+    const KNOWN = {
+      books:       { label: 'Books',       prefix: 'Book' },
+      whitePapers: { label: 'White Papers', prefix: 'Paper' },
+      tearSheets:  { label: 'Tear Sheets',  prefix: 'Tear Sheet' },
+      articles:    { label: 'Articles',     prefix: 'Article' },
+    };
+    // Preferred render order: known keys first (in KNOWN order), then any new keys alphabetically.
+    const knownOrder = Object.keys(KNOWN);
+    const allArrayKeys = Object.keys(lib).filter(k => Array.isArray(lib[k]) && lib[k].length > 0);
+    const orderedKeys = [
+      ...knownOrder.filter(k => allArrayKeys.includes(k)),
+      ...allArrayKeys.filter(k => !knownOrder.includes(k)).sort(),
+    ];
+
+    // Derive a human label from a camelCase key when it isn't in KNOWN.
+    function keyToLabel(k) {
+      return k.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).trim();
+    }
+
+    const total = allArrayKeys.reduce((n, k) => n + lib[k].length, 0);
     const masthead =
       '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
       '<div style="display:flex;align-items:baseline;gap:20px;">' +
@@ -946,10 +967,10 @@ a{color:inherit;}
       '</section>';
 
     const body = masthead +
-      section('Books',        lib.books       || [], 'Book') +
-      section('White Papers', lib.whitePapers || [], 'Paper') +
-      section('Tear Sheets',  lib.tearSheets  || [], 'Tear Sheet') +
-      section('Articles',     lib.articles    || [], 'Article');
+      orderedKeys.map(k => {
+        const meta   = KNOWN[k] || { label: keyToLabel(k), prefix: keyToLabel(k).replace(/s$/, '') };
+        return section(meta.label, lib[k], meta.prefix);
+      }).join('');
 
     res.send(page('Library', 'Library', body));
   });
