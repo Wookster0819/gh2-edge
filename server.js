@@ -738,46 +738,26 @@ a{color:inherit;}
     } catch(e) { res.status(502).send('Proxy error: ' + e.message); }
   });
 
-  // ── Case-study thumbnail (SVG placeholder, replaced by real screenshot when available) ──
+  // ── Case-study thumbnail (auto-screenshot of the live panel via thum.io) ──────
   app.get('/institutional/thumbnail/:slug', async (req, res) => {
     let data;
     try { data = await getCaseStudies(); }
     catch(e) { return res.status(502).send('Could not load manifest'); }
     const panels = data.caseStudies || [];
     const panel  = panels.find(p => p.slug === req.params.slug);
-    const title  = panel ? panel.title : req.params.slug;
-    const idx    = panel ? panels.indexOf(panel) : 0;
-    const num    = String(idx + 1).padStart(2, '0');
+    if (!panel) return res.status(404).send('Panel not found');
 
-    const safe = title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-
-    const words = safe.split(' ');
-    const lines = [];
-    let cur = '';
-    for (const w of words) {
-      if (cur && (cur + ' ' + w).length > 28) { lines.push(cur); cur = w; }
-      else { cur = cur ? cur + ' ' + w : w; }
+    // If the manifest already has a hand-supplied thumbnailUrl, use it directly.
+    if (panel.thumbnailUrl) {
+      return res.redirect(302, panel.thumbnailUrl);
     }
-    if (cur) lines.push(cur);
 
-    const lineH = 26;
-    const startY = 120 - ((lines.length - 1) * lineH) / 2;
-    const textLines = lines.map((l, i) =>
-      `<text x="240" y="${startY + i * lineH}" text-anchor="middle" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="18" font-weight="700" fill="#141412" letter-spacing="-0.3">${l}</text>`
-    ).join('');
-
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="270" viewBox="0 0 480 270">
-  <rect width="480" height="270" fill="#EDECE5"/>
-  <rect x="0" y="0" width="480" height="3" fill="#C43A1E"/>
-  <text x="24" y="34" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="10" letter-spacing="2.5" text-transform="uppercase" fill="#C43A1E">CASE STUDY · ${num}</text>
-  ${textLines}
-  <text x="24" y="254" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="10" letter-spacing="2" fill="#9B9B94">GH2 EDGE™ · Interactive panel</text>
-  <text x="440" y="254" text-anchor="end" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="38" font-weight="700" fill="rgba(20,20,18,0.06)" letter-spacing="-1">${num}</text>
-</svg>`;
-
-    res.setHeader('Content-Type', 'image/svg+xml');
+    // Otherwise auto-screenshot the panel's public embedUrl.
+    // thum.io renders the page in a real browser and returns a JPEG — no auth needed.
+    const targetUrl = encodeURIComponent(panel.embedUrl);
+    const screenshotUrl = `https://image.thum.io/get/width/720/crop/405/noanimate/png/${targetUrl}`;
     res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.send(svg);
+    res.redirect(302, screenshotUrl);
   });
 
   // ── Case-study gallery ────────────────────────────────────────────────────────
