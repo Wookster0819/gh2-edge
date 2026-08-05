@@ -921,27 +921,13 @@ a{color:inherit;}
         '</div></div></a>';
     }
 
-    function section(sectionLabel, items, typePrefix) {
-      if (!items || !items.length) return '';
-      const grid = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px;padding:32px 32px 48px;max-width:1360px;margin:0 auto;">' +
-        items.map((item, i) => card(typePrefix + ' \u00b7 ' + String(i+1).padStart(2,'0'), item, i)).join('') +
-        '</div>';
-      return '<section style="border-bottom:' + BD + ';">' +
-        '<div style="max-width:1360px;margin:0 auto;padding:32px 32px 24px;display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:' + BD + ';">' +
-        '<div style="display:flex;align-items:baseline;gap:20px;">' +
-        '<span style="font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#6B6B64;">' + sectionLabel + '</span>' +
-        '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#141412;font-weight:700;">' + items.length + ' ' + (items.length === 1 ? 'title' : 'titles') + '</span>' +
-        '</div></div>' +
-        grid + '</section>';
-    }
-
     // Display names and card-label prefixes for known keys.
     // Any key not listed here falls back to title-cased camelCase automatically.
     const KNOWN = {
       books:       { label: 'Books',       prefix: 'Book' },
+      articles:    { label: 'Articles',    prefix: 'Article' },
       whitePapers: { label: 'White Papers', prefix: 'Paper' },
-      tearSheets:  { label: 'Tear Sheets',  prefix: 'Tear Sheet' },
-      articles:    { label: 'Articles',     prefix: 'Article' },
+      tearSheets:  { label: 'Tear Sheets', prefix: 'Tear Sheet' },
     };
     // Preferred render order: known keys first (in KNOWN order), then any new keys alphabetically.
     const knownOrder = Object.keys(KNOWN);
@@ -957,6 +943,8 @@ a{color:inherit;}
     }
 
     const total = allArrayKeys.reduce((n, k) => n + lib[k].length, 0);
+
+    // ── Masthead ─────────────────────────────────────────────────────────────────
     const masthead =
       '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
       '<div style="display:flex;align-items:baseline;gap:20px;">' +
@@ -966,12 +954,76 @@ a{color:inherit;}
       '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + total + ' titles</span>' +
       '</section>';
 
-    const body = masthead +
-      orderedKeys.map(k => {
-        const meta   = KNOWN[k] || { label: keyToLabel(k), prefix: keyToLabel(k).replace(/s$/, '') };
-        return section(meta.label, lib[k], meta.prefix);
-      }).join('');
+    // ── Tab bar ───────────────────────────────────────────────────────────────────
+    const tabBar =
+      '<div style="border-bottom:' + BD + ';position:sticky;top:0;z-index:10;background:#FAFAF7;">' +
+      '<div style="max-width:1360px;margin:0 auto;padding:0 32px;display:flex;gap:0;">' +
+      orderedKeys.map((k, i) => {
+        const meta = KNOWN[k] || { label: keyToLabel(k) };
+        return '<button id="tab-' + k + '" onclick="libTab(\'' + k + '\')" ' +
+          'style="background:none;border:none;cursor:pointer;padding:18px 28px 16px;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:' + (i === 0 ? '#141412' : '#9B9B94') + ';font-weight:' + (i === 0 ? '700' : '400') + ';border-bottom:' + (i === 0 ? '2px solid #141412' : '2px solid transparent') + ';margin-bottom:-1px;transition:color 0.15s,border-color 0.15s;" ' +
+          'onmouseover="if(!this.classList.contains(\'lib-tab-active\'))this.style.color=\'#141412\'" ' +
+          'onmouseout="if(!this.classList.contains(\'lib-tab-active\'))this.style.color=\'#9B9B94\'">' +
+          meta.label + '</button>';
+      }).join('') +
+      '</div></div>';
 
+    // ── Panels (one per category) ─────────────────────────────────────────────────
+    const panels = orderedKeys.map((k, i) => {
+      const meta  = KNOWN[k] || { label: keyToLabel(k), prefix: keyToLabel(k).replace(/s$/, '') };
+      const items = lib[k];
+      const grid  =
+        '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:#141412;border-bottom:' + BD + ';">' +
+        items.map((item, idx) => {
+          const label = meta.prefix + ' \u00b7 ' + String(idx + 1).padStart(2, '0');
+          const bullets = (item.bullets && item.bullets.length)
+            ? '<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;">' +
+              item.bullets.map(b =>
+                '<li style="font-size:12px;line-height:1.55;color:#6B6B64;padding-left:14px;position:relative;">' +
+                '<span style="position:absolute;left:0;top:6px;width:5px;height:5px;background:#C43A1E;display:inline-block;"></span>' +
+                b + '</li>'
+              ).join('') + '</ul>'
+            : (item.description ? '<p style="margin:0;font-size:12px;line-height:1.6;color:#6B6B64;">' + item.description + '</p>' : '');
+          const meta2 = item.subtitle || item.version || '';
+          return '<a href="' + item.url + '" target="_blank" rel="noopener" ' +
+            'style="text-decoration:none;display:flex;flex-direction:column;background:#FAFAF7;transition:background 0.15s;" ' +
+            'onmouseover="this.style.background=\'#F1F0EA\'" onmouseout="this.style.background=\'#FAFAF7\'">' +
+            (item.coverUrl
+              ? '<div style="overflow:hidden;aspect-ratio:16/10;background:#EDECE5;">' +
+                '<img src="' + item.coverUrl + '" alt="' + item.title.replace(/"/g, '&quot;') + '" ' +
+                'style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy"></div>'
+              : '') +
+            '<div style="padding:20px 24px 24px;flex:1;display:flex;flex-direction:column;gap:10px;">' +
+            '<span style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#C43A1E;">' + label + '</span>' +
+            '<div style="font-size:15px;font-weight:700;line-height:1.25;letter-spacing:-0.01em;color:#141412;">' + item.title + '</div>' +
+            (meta2 ? '<div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#6B6B64;">' + meta2 + '</div>' : '') +
+            (bullets ? '<div style="margin-top:2px;">' + bullets + '</div>' : '') +
+            '<div style="margin-top:auto;padding-top:14px;">' +
+            '<span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-bottom:2px solid #C43A1E;padding-bottom:2px;color:#141412;">Read \u2192</span>' +
+            '</div></div></a>';
+        }).join('') +
+        '</div>';
+      return '<div id="panel-' + k + '" style="display:' + (i === 0 ? 'block' : 'none') + ';">' + grid + '</div>';
+    }).join('');
+
+    // ── Tab-switch JS (hash-bookmarkable) ────────────────────────────────────────
+    const tabJS =
+      '<script>' +
+      'function libTab(key){' +
+      'document.querySelectorAll(\'[id^="panel-"]\').forEach(function(p){p.style.display="none";});' +
+      'document.querySelectorAll(\'[id^="tab-"]\').forEach(function(t){' +
+        't.style.color="#9B9B94";t.style.fontWeight="400";t.style.borderBottomColor="transparent";t.classList.remove("lib-tab-active");' +
+      '});' +
+      'var p=document.getElementById("panel-"+key);if(p)p.style.display="block";' +
+      'var t=document.getElementById("tab-"+key);' +
+      'if(t){t.style.color="#141412";t.style.fontWeight="700";t.style.borderBottomColor="#141412";t.classList.add("lib-tab-active");}' +
+      'history.replaceState(null,"","#"+key);' +
+      '}' +
+      'var h=location.hash.slice(1);' +
+      'if(h&&document.getElementById("panel-"+h))libTab(h);' +
+      '</script>';
+
+    const body = masthead + tabBar + panels + tabJS;
     res.send(page('Library', 'Library', body));
   });
 
