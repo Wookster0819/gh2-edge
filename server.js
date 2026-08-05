@@ -973,7 +973,7 @@ a{color:inherit;}
       const meta  = KNOWN[k] || { label: keyToLabel(k), prefix: keyToLabel(k).replace(/s$/, '') };
       const items = lib[k];
       const grid  =
-        '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:#141412;border-bottom:' + BD + ';">' +
+        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding:48px 32px 64px;max-width:1360px;margin:0 auto;">' +
         items.map((item, idx) => {
           const label = meta.prefix + ' \u00b7 ' + String(idx + 1).padStart(2, '0');
           const bullets = (item.bullets && item.bullets.length)
