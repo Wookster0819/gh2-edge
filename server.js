@@ -973,7 +973,7 @@ a{color:inherit;}
       const meta  = KNOWN[k] || { label: keyToLabel(k), prefix: keyToLabel(k).replace(/s$/, '') };
       const items = lib[k];
       const grid  =
-        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding:48px 32px 64px;max-width:1360px;margin:0 auto;">' +
+        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding:48px 32px 64px;max-width:1360px;margin:0 auto;box-sizing:border-box;">' +
         items.map((item, idx) => {
           const label = meta.prefix + ' \u00b7 ' + String(idx + 1).padStart(2, '0');
           const bullets = (item.bullets && item.bullets.length)
@@ -983,13 +983,13 @@ a{color:inherit;}
                 '<span style="position:absolute;left:0;top:6px;width:5px;height:5px;background:#C43A1E;display:inline-block;"></span>' +
                 b + '</li>'
               ).join('') + '</ul>'
-            : (item.description ? '<p style="margin:0;font-size:12px;line-height:1.6;color:#6B6B64;">' + item.description + '</p>' : '');
+            : (item.description ? '<p style="margin:0;font-size:13px;line-height:1.6;color:#6B6B64;">' + item.description + '</p>' : '');
           const meta2 = item.subtitle || item.version || '';
           return '<a href="' + item.url + '" target="_blank" rel="noopener" ' +
-            'style="text-decoration:none;display:flex;flex-direction:column;background:#FAFAF7;transition:background 0.15s;" ' +
-            'onmouseover="this.style.background=\'#F1F0EA\'" onmouseout="this.style.background=\'#FAFAF7\'">' +
+            'style="text-decoration:none;display:flex;flex-direction:column;border:1px solid #141412;background:#FAFAF7;transition:box-shadow 0.15s;" ' +
+            'onmouseover="this.style.boxShadow=\'0 4px 24px rgba(20,20,18,0.10)\'" onmouseout="this.style.boxShadow=\'none\'">' +
             (item.coverUrl
-              ? '<div style="overflow:hidden;aspect-ratio:16/10;background:#EDECE5;">' +
+              ? '<div style="overflow:hidden;aspect-ratio:3/4;background:#EDECE5;border-bottom:1px solid #141412;">' +
                 '<img src="' + item.coverUrl + '" alt="' + item.title.replace(/"/g, '&quot;') + '" ' +
                 'style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy"></div>'
               : '') +
