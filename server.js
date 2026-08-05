@@ -533,7 +533,11 @@ a{color:inherit;}
         '</div>' +
         '</div>' +
         '<div class="cs-row-thumb">' +
-        '<img src="' + (p.thumbnailUrl || '/institutional/thumbnail/' + p.slug) + '" alt="" aria-hidden="true" loading="lazy" width="360" height="202">' +
+        '<div class="cs-thumb-wrap">' +
+        '<iframe class="cs-thumb-frame" src="/institutional/embed/' + p.slug + '" ' +
+        'scrolling="no" tabindex="-1" aria-hidden="true" ' +
+        'sandbox="allow-scripts allow-same-origin"></iframe>' +
+        '</div>' +
         '<span class="cs-row-num">' + num + '</span>' +
         '</div>' +
         '</a>';
@@ -738,7 +742,8 @@ a{color:inherit;}
     } catch(e) { res.status(502).send('Proxy error: ' + e.message); }
   });
 
-  // ── Case-study thumbnail (auto-screenshot of the live panel via thum.io) ──────
+  // ── Case-study thumbnail route kept for backward-compat / direct image fallback ──
+  // Gallery rows now use live scaled iframes instead of this route.
   app.get('/institutional/thumbnail/:slug', async (req, res) => {
     let data;
     try { data = await getCaseStudies(); }
@@ -746,18 +751,9 @@ a{color:inherit;}
     const panels = data.caseStudies || [];
     const panel  = panels.find(p => p.slug === req.params.slug);
     if (!panel) return res.status(404).send('Panel not found');
-
-    // If the manifest already has a hand-supplied thumbnailUrl, use it directly.
-    if (panel.thumbnailUrl) {
-      return res.redirect(302, panel.thumbnailUrl);
-    }
-
-    // Otherwise auto-screenshot the panel's public embedUrl.
-    // thum.io renders the page in a real browser and returns a JPEG — no auth needed.
-    const targetUrl = encodeURIComponent(panel.embedUrl);
-    const screenshotUrl = `https://image.thum.io/get/width/720/crop/405/noanimate/png/${targetUrl}`;
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.redirect(302, screenshotUrl);
+    if (panel.thumbnailUrl) return res.redirect(302, panel.thumbnailUrl);
+    // Redirect to the embed so at least something renders in an <img> fallback context.
+    res.redirect(302, panel.embedUrl);
   });
 
   // ── Case-study gallery ────────────────────────────────────────────────────────
@@ -803,9 +799,10 @@ a{color:inherit;}
       '.cs-row-cta{display:flex;align-items:center;gap:12px;}' +
       '.cs-row-arrow{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#C43A1E;opacity:0;transform:translateX(-6px);transition:opacity 0.18s,transform 0.18s;}' +
       '.cs-row-thumb{flex:0 0 360px;position:relative;overflow:hidden;border-left:1px solid #141412;background:#EDECE5;}' +
-      '.cs-row-thumb img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}' +
+      '.cs-thumb-wrap{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;}' +
+      '.cs-thumb-frame{border:none;width:1080px;height:810px;transform:scale(0.3333);transform-origin:top left;pointer-events:none;background:#EDECE5;}' +
       '.cs-row-num{position:absolute;bottom:12px;right:16px;font-size:clamp(56px,6vw,88px);font-weight:700;line-height:1;letter-spacing:-0.04em;color:rgba(20,20,18,0.07);pointer-events:none;user-select:none;}' +
-      '@media(max-width:720px){.cs-row{flex-direction:column;}.cs-row-thumb{flex:0 0 200px;border-left:none;border-top:1px solid #141412;}.cs-row-body{padding:28px 24px;}}' +
+      '@media(max-width:720px){.cs-row{flex-direction:column;}.cs-row-thumb{flex:0 0 270px;border-left:none;border-top:1px solid #141412;}.cs-row-body{padding:28px 24px;}}' +
       '</style>';
 
     const rows = panels.map((p, i) => {
@@ -823,7 +820,11 @@ a{color:inherit;}
         '</div>' +
         '</div>' +
         '<div class="cs-row-thumb">' +
-        '<img src="' + (p.thumbnailUrl || '/institutional/thumbnail/' + p.slug) + '" alt="" aria-hidden="true" loading="lazy" width="360" height="202">' +
+        '<div class="cs-thumb-wrap">' +
+        '<iframe class="cs-thumb-frame" src="/institutional/embed/' + p.slug + '" ' +
+        'scrolling="no" tabindex="-1" aria-hidden="true" ' +
+        'sandbox="allow-scripts allow-same-origin"></iframe>' +
+        '</div>' +
         '<span class="cs-row-num">' + num + '</span>' +
         '</div>' +
         '</a>';
