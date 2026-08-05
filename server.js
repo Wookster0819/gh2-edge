@@ -935,7 +935,7 @@ a{color:inherit;}
         grid + '</section>';
     }
 
-    const total = (lib.books||[]).length + (lib.whitePapers||[]).length + (lib.articles||[]).length;
+    const total = (lib.books||[]).length + (lib.whitePapers||[]).length + (lib.articles||[]).length + (lib.tearSheets||[]).length;
     const masthead =
       '<section style="max-width:1360px;margin:0 auto;padding:64px 32px 40px;border-bottom:' + BD + ';display:flex;align-items:baseline;justify-content:space-between;gap:32px;flex-wrap:wrap;">' +
       '<div style="display:flex;align-items:baseline;gap:20px;">' +
@@ -946,9 +946,10 @@ a{color:inherit;}
       '</section>';
 
     const body = masthead +
-      section('Books',        lib.books      || [], 'Book') +
+      section('Books',        lib.books       || [], 'Book') +
       section('White Papers', lib.whitePapers || [], 'Paper') +
-      section('Articles',     lib.articles   || [], 'Article');
+      section('Tear Sheets',  lib.tearSheets  || [], 'Tear Sheet') +
+      section('Articles',     lib.articles    || [], 'Article');
 
     res.send(page('Library', 'Library', body));
   });
