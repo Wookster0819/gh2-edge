@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "installCommand": "npm install --omit=dev --no-audit --no-fund --no-package-lock",
-  "buildCommand": "",
-  "framework": null,
-  "routes": [
-    { "src": "/(.*)", "dest": "/api/index.js" }
-  ]
-}
